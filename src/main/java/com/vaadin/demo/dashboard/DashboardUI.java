@@ -1,13 +1,12 @@
 /**
  * DISCLAIMER
- * 
+ *
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
- * 
+ *
  * @author jouni@vaadin.com
- * 
+ *
  */
-
 package com.vaadin.demo.dashboard;
 
 import java.util.HashMap;
@@ -31,6 +30,8 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.WrappedHttpSession;
+import com.vaadin.server.WrappedSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Alignment;
@@ -54,10 +55,16 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 @Theme("dashboard")
 @Title("QuickTickets Dashboard")
 public class DashboardUI extends UI {
+
+    private ApplicationContext applicationContext;
 
     DataProvider dataProvider = new DataProvider();
 
@@ -80,7 +87,7 @@ public class DashboardUI extends UI {
         }
     };
 
-    HashMap<String, Button> viewNameToMenuButton = new HashMap<String, Button>();
+    HashMap<String, Button> viewNameToMenuButton = new HashMap<>();
 
     private Navigator nav;
 
@@ -105,8 +112,27 @@ public class DashboardUI extends UI {
         bg.addStyleName("login-bg");
         root.addComponent(bg);
 
+        getUserService(request);
+        
         buildLoginView(false);
 
+    }
+
+    private void getUserService(VaadinRequest request) {
+        WrappedSession session = request.getWrappedSession();
+        HttpSession httpSession = ((WrappedHttpSession) session).getHttpSession();
+        ServletContext servletContext = httpSession.getServletContext();
+        applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+
+        Navigator navigator = new Navigator(this, this);
+        navigator.addView("login", LoginView.class);
+        navigator.addView("user", DashboardView.class);
+        navigator.navigateTo("login");
+        setNavigator(navigator);
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     private void buildLoginView(boolean exit) {
@@ -170,11 +196,11 @@ public class DashboardUI extends UI {
 
         final ShortcutListener enter = new ShortcutListener("Sign In",
                 KeyCode.ENTER, null) {
-            @Override
-            public void handleAction(Object sender, Object target) {
-                signin.click();
-            }
-        };
+                    @Override
+                    public void handleAction(Object sender, Object target) {
+                        signin.click();
+                    }
+                };
 
         signin.addClickListener(new ClickListener() {
             @Override
@@ -315,8 +341,8 @@ public class DashboardUI extends UI {
 
         menu.removeAllComponents();
 
-        for (final String view : new String[] { "dashboard", "sales",
-                "transactions", "reports", "schedule" }) {
+        for (final String view : new String[]{"dashboard", "sales",
+            "transactions", "reports", "schedule"}) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));
             b.addStyleName("icon-" + view);
@@ -325,8 +351,9 @@ public class DashboardUI extends UI {
                 public void buttonClick(ClickEvent event) {
                     clearMenuSelection();
                     event.getButton().addStyleName("selected");
-                    if (!nav.getState().equals("/" + view))
+                    if (!nav.getState().equals("/" + view)) {
                         nav.navigateTo("/" + view);
+                    }
                 }
             });
 
