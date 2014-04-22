@@ -9,10 +9,6 @@
  */
 package com.vaadin.demo.dashboard;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.demo.dashboard.data.DataProvider;
@@ -55,6 +51,9 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import org.springframework.context.ApplicationContext;
@@ -79,6 +78,7 @@ public class DashboardUI extends UI {
 
     HashMap<String, Class<? extends View>> routes = new HashMap<String, Class<? extends View>>() {
         {
+            put("/login", LoginView.class);
             put("/dashboard", DashboardView.class);
             put("/sales", SalesView.class);
             put("/transactions", TransactionsView.class);
@@ -113,9 +113,8 @@ public class DashboardUI extends UI {
         root.addComponent(bg);
 
         getUserService(request);
-        
-        buildLoginView(false);
 
+        //buildLoginView(false);
     }
 
     private void getUserService(VaadinRequest request) {
@@ -124,10 +123,13 @@ public class DashboardUI extends UI {
         ServletContext servletContext = httpSession.getServletContext();
         applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 
-        Navigator navigator = new Navigator(this, this);
-        navigator.addView("login", LoginView.class);
-        navigator.addView("user", DashboardView.class);
-        navigator.navigateTo("login");
+        Navigator navigator = new Navigator(this, content);
+
+        routes.keySet().stream().forEach((route) -> {
+            navigator.addView(route, routes.get(route));
+        });
+
+        navigator.navigateTo("/login");
         setNavigator(navigator);
     }
 
