@@ -35,9 +35,9 @@ public class LoginView extends VerticalLayout implements View {
     public LoginView() {
 
         notifications = new Window("HelpManager");
-        
+
         helpManager = new HelpManager(notifications.getUI());
-        
+
         helpManager.closeAll();
         HelpOverlay w = helpManager
                 .addOverlay(
@@ -45,7 +45,7 @@ public class LoginView extends VerticalLayout implements View {
                         "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
                         "login");
         w.center();
-                
+
         UI.getCurrent().addWindow(w);
 
         addStyleName("login");
@@ -53,7 +53,8 @@ public class LoginView extends VerticalLayout implements View {
         loginLayout = new VerticalLayout();
         loginLayout.setSizeFull();
         loginLayout.addStyleName("login-layout");
-        addComponent(loginLayout);
+
+        UI.getCurrent().setContent(loginLayout);
 
         final CssLayout loginPanel = new CssLayout();
         loginPanel.addStyleName("login-panel");
@@ -101,6 +102,25 @@ public class LoginView extends VerticalLayout implements View {
                         signin.click();
                     }
                 };
+
+        signin.addClickListener((Button.ClickEvent event) -> {
+
+            System.out.println(event.getButton());
+
+            /*
+             UI ui = UI.getCurrent().getSession();
+             ApplicationContext context = ui.getApplicationContext();
+
+             return context.getBean(LoginFormListener.class);
+             */
+        });
+
+        signin.addShortcutListener(enter);
+
+        loginPanel.addComponent(fields);
+
+        loginLayout.addComponent(loginPanel);
+        loginLayout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
     }
 
     @Override

@@ -97,6 +97,9 @@ public class DashboardUI extends UI {
     protected void init(VaadinRequest request) {
         getSession().setConverterFactory(new MyConverterFactory());
 
+        //configureApplication();
+        //initApplication();
+        
         helpManager = new HelpManager(this);
 
         setLocale(Locale.US);
