@@ -18,6 +18,8 @@ import com.vaadin.ui.Window;
  */
 public class LoginView extends HorizontalLayout implements View {
 
+    public static final String NAME = "login";
+
     Window notifications;
 
     private final HelpManager helpManager;

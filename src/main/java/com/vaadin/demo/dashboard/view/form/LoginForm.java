@@ -31,21 +31,6 @@ public class LoginForm extends HorizontalLayout {
     private final TextField username = new TextField("Username");
     private final PasswordField password = new PasswordField("Password");
 
-    /*
-     final Button signin = new Button("Sign In");
-
-     public LoginForm() {
-        
-     this.setSizeFull();
-     UI.getCurrent().setContent(this);
-     addComponent(username);
-     addComponent(password);
-     addComponent(signin);
-     LoginListener loginListener = getLoginListener();
-     signin.addClickListener(loginListener);
-     }
-    
-     */
     public LoginForm() {
 
         loginLayout = new VerticalLayout();
@@ -81,9 +66,12 @@ public class LoginForm extends HorizontalLayout {
         fields.setMargin(true);
         fields.addStyleName("fields");
 
+        username.setValue("TEST");
+        username.setNullRepresentation("");
         username.focus();
         fields.addComponent(username);
 
+        password.setNullRepresentation("");
         fields.addComponent(password);
 
         final Button signin = new Button("Sign In");
@@ -110,8 +98,13 @@ public class LoginForm extends HorizontalLayout {
     }
 
     private LoginListener getLoginListener() {
+
         DashboardUI ui = (DashboardUI) UI.getCurrent();
         ApplicationContext context = ui.getApplicationContext();
+
+        ((DashboardUI) UI.getCurrent()).getSession().setAttribute("username", getUsername().getValue());
+        ((DashboardUI) UI.getCurrent()).getSession().setAttribute("password", getPassword().getValue());
+
         return context.getBean(LoginListener.class);
     }
 

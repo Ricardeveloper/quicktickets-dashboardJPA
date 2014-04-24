@@ -9,8 +9,10 @@
  */
 package com.vaadin.demo.dashboard;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.demo.dashboard.controller.ViewChangeSecurityChecker;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.demo.dashboard.data.MyConverterFactory;
@@ -64,10 +66,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+@PreserveOnRefresh
 @Theme("dashboard")
 @Title("QuickTickets Dashboard")
 public class DashboardUI extends UI {
 
+    //private EventBus bus = new EventBus();
     private ApplicationContext applicationContext;
 
     private final DataProvider dataProvider = new DataProvider();
@@ -104,7 +108,6 @@ public class DashboardUI extends UI {
 
         //configureApplication();
         //initApplication();
-        
         helpManager = new HelpManager(this);
 
         setLocale(Locale.US);
@@ -132,6 +135,9 @@ public class DashboardUI extends UI {
         applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 
         Navigator navigator = new Navigator(this, content);
+
+        // check that users are authenticated before calling any view
+        navigator.addViewChangeListener(new ViewChangeSecurityChecker());
 
         routes.keySet().stream().forEach((route) -> {
             navigator.addView(route, routes.get(route));

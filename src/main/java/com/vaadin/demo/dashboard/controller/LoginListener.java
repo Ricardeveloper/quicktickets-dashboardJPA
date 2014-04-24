@@ -5,14 +5,13 @@
  */
 package com.vaadin.demo.dashboard.controller;
 
-import com.vaadin.demo.dashboard.view.form.LoginForm;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,28 +22,21 @@ import org.springframework.stereotype.Component;
 public class LoginListener implements Button.ClickListener {
 
     @Autowired
-    private AuthManager authManager;
+    private final AuthManager authManager = new AuthManager();
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
         try {
+
             Button source = event.getButton();
-            //LoginForm parent = (LoginForm) source.getParent();
-            LoginForm parent = (LoginForm) source.getParent().getParent();
 
-            String username = parent.getUsername().getValue();
+            String username = (String) ((DashboardUI) UI.getCurrent()).getSession().getAttribute("username");
+            String password = (String) ((DashboardUI) UI.getCurrent()).getSession().getAttribute("password");
+            authManager.handleAuthentication(username, password, RequestHolder.getRequest());
 
-            System.out.println(username);
-            //String username = parent.getTxtLogin().getValue();
-            //String password = parent.getTxtPassword().getValue();
-            //UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken(username, password);
-            System.out.println("MUZZZ");
-            UsernamePasswordAuthenticationToken request = new UsernamePasswordAuthenticationToken("Muaz", "1234");
-            Authentication result = authManager.authenticate(request);
-            SecurityContextHolder.getContext().setAuthentication(result);
-            //AppUI current = (AppUI) UI.getCurrent();
-            //Navigator navigator = current.getNavigator();
-            //navigator.navigateTo("user");
+            DashboardUI current = (DashboardUI) UI.getCurrent();
+            Navigator navigator = current.getNavigator();
+            navigator.navigateTo("dashboard");
         }
         catch (AuthenticationException e) {
             Notification.show("Authentication failed: "

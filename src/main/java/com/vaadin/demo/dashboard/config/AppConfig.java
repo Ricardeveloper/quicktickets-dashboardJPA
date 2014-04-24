@@ -33,7 +33,7 @@ public class AppConfig {
     }
 
     @Bean
-    public LoginListener loginFormListener() {
+    public LoginListener loginListener() {
         return new LoginListener();
     }
 }
