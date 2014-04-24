@@ -1,9 +1,7 @@
 package com.vaadin.demo.dashboard;
 
-import java.text.SimpleDateFormat;
-
-import com.vaadin.demo.dashboard.ScheduleView.MovieEvent;
 import com.vaadin.demo.dashboard.data.DataProvider.Movie;
+import com.vaadin.demo.dashboard.view.ScheduleView.MovieEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -22,6 +20,7 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.text.SimpleDateFormat;
 
 public class MovieDetailsWindow extends Window {
 
@@ -89,18 +88,18 @@ public class MovieDetailsWindow extends Window {
             SimpleDateFormat df = new SimpleDateFormat();
 
             df.applyPattern("dd-mm-yyyy");
-            label = new Label(df.format(event.start));
+            label = new Label(df.format(event.getStart()));
             label.setSizeUndefined();
             label.setCaption("Date");
             fields.addComponent(label);
 
             df.applyPattern("hh:mm a");
-            label = new Label(df.format(event.start));
+            label = new Label(df.format(event.getStart()));
             label.setSizeUndefined();
             label.setCaption("Starts");
             fields.addComponent(label);
 
-            label = new Label(df.format(event.end));
+            label = new Label(df.format(event.getEnd()));
             label.setSizeUndefined();
             label.setCaption("Ends");
             fields.addComponent(label);

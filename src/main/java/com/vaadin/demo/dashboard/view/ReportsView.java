@@ -1,24 +1,19 @@
 /**
  * DISCLAIMER
- * 
+ *
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
- * 
+ *
  * @author jouni@vaadin.com
- * 
+ *
  */
-
-package com.vaadin.demo.dashboard;
-
-import java.awt.Color;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
+package com.vaadin.demo.dashboard.view;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.HelpManager;
+import com.vaadin.demo.dashboard.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
@@ -67,6 +62,12 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.awt.Color;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 
 public class ReportsView extends HorizontalLayout implements View {
 
@@ -159,11 +160,11 @@ public class ReportsView extends HorizontalLayout implements View {
 
                 alert.addShortcutListener(new ShortcutListener("Cancel",
                         KeyCode.ESCAPE, null) {
-                    @Override
-                    public void handleAction(Object sender, Object target) {
-                        alert.close();
-                    }
-                });
+                            @Override
+                            public void handleAction(Object sender, Object target) {
+                                alert.close();
+                            }
+                        });
 
                 getUI().addWindow(alert);
             }
@@ -385,6 +386,7 @@ public class ReportsView extends HorizontalLayout implements View {
     }
 
     private class SortableLayout extends CustomComponent {
+
         private VerticalLayout layout;
         private final DropHandler dropHandler;
 
@@ -432,20 +434,23 @@ public class ReportsView extends HorizontalLayout implements View {
                     if (val.contains(tt.getData("itemId"))) {
                         for (Object id : val) {
                             Item item = s.getItem(id);
-                            if (item != null)
+                            if (item != null) {
                                 labels.addComponent(createTransactionLabel(item));
+                            }
                         }
                     } else {
                         Item item = s.getItem(tt.getData("itemId"));
-                        if (item != null)
+                        if (item != null) {
                             labels.addComponent(createTransactionLabel(item));
+                        }
                     }
                 } else if (table != null) {
                     Set<Object> val = (Set<Object>) table.getValue();
                     for (Object id : val) {
                         Item item = table.getItem(id);
-                        if (item != null)
+                        if (item != null) {
                             labels.addComponent(createTransactionLabel(item));
+                        }
                     }
                 }
 
@@ -518,9 +523,9 @@ public class ReportsView extends HorizontalLayout implements View {
 
     }
 
-    Color[] colors = new Color[] { new Color(52, 154, 255),
-            new Color(242, 81, 57), new Color(255, 201, 35),
-            new Color(83, 220, 164) };
+    Color[] colors = new Color[]{new Color(52, 154, 255),
+        new Color(242, 81, 57), new Color(255, 201, 35),
+        new Color(83, 220, 164)};
     int colorIndex = -1;
 
     private AbstractComponent createComponentFromPaletteItem(String caption,
@@ -534,10 +539,11 @@ public class ReportsView extends HorizontalLayout implements View {
                 l.setWidth("100%");
                 final RichTextArea rta = new RichTextArea();
                 rta.setWidth("100%");
-                if (data == null)
+                if (data == null) {
                     rta.setValue(Generator.randomText(30));
-                else
+                } else {
                     rta.setValue(data);
+                }
                 l.addComponent(rta);
                 final Label text = new Label();
                 final Button save = new Button("Save");
@@ -592,7 +598,7 @@ public class ReportsView extends HorizontalLayout implements View {
                     }
                 };
                 t.setCaption("Top 10 Titles by Revenue");
-                t.setContainerDataSource(((DashboardUI) getUI()).dataProvider
+                t.setContainerDataSource(((DashboardUI) getUI()).getDataProvider()
                         .getRevenueByTitle());
                 t.setWidth("100%");
                 t.setPageLength(0);
@@ -684,9 +690,7 @@ public class ReportsView extends HorizontalLayout implements View {
                     if (sourceWasAfterTarget) {
                         index--;
                     }
-                }
-
-                // drop before the target?
+                } // drop before the target?
                 else if (dropTargetData.getData("verticalLocation").equals(
                         VerticalDropLocation.TOP.toString())) {
                     index--;
@@ -706,6 +710,7 @@ public class ReportsView extends HorizontalLayout implements View {
         editors.addTab(createEditorInstance(which, items, table)).setClosable(
                 true);
         editors.setSelectedTab(editors.getComponentCount() - 1);
-    };
+    }
+;
 
 }

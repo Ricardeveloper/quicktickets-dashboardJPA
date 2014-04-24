@@ -8,12 +8,9 @@
  * 
  */
 
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.view;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.vaadin.demo.dashboard.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.DataProvider.Movie;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -57,6 +54,9 @@ import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ScheduleView extends CssLayout implements View {
 
@@ -325,7 +325,7 @@ public class ScheduleView extends CssLayout implements View {
 
     }
 
-    class MovieEvent implements CalendarEvent {
+    public class MovieEvent implements CalendarEvent {
 
         Date start;
         Date end;

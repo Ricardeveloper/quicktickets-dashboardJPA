@@ -14,6 +14,11 @@ import com.vaadin.annotations.Title;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.demo.dashboard.data.MyConverterFactory;
+import com.vaadin.demo.dashboard.view.DashboardView;
+import com.vaadin.demo.dashboard.view.ReportsView;
+import com.vaadin.demo.dashboard.view.SalesView;
+import com.vaadin.demo.dashboard.view.ScheduleView;
+import com.vaadin.demo.dashboard.view.TransactionsView;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.Transferable;
@@ -65,7 +70,7 @@ public class DashboardUI extends UI {
 
     private ApplicationContext applicationContext;
 
-    DataProvider dataProvider = new DataProvider();
+    private final DataProvider dataProvider = new DataProvider();
 
     private static final long serialVersionUID = 1L;
 
@@ -248,9 +253,9 @@ public class DashboardUI extends UI {
 
         nav = new Navigator(this, content);
 
-        for (String route : routes.keySet()) {
+        routes.keySet().stream().forEach((route) -> {
             nav.addView(route, routes.get(route));
-        }
+        });
 
         helpManager.closeAll();
         removeStyleName("login");
@@ -450,13 +455,13 @@ public class DashboardUI extends UI {
         }
     }
 
-    void updateReportsButtonBadge(String badgeCount) {
+    public void updateReportsButtonBadge(String badgeCount) {
         viewNameToMenuButton.get("/reports").setHtmlContentAllowed(true);
         viewNameToMenuButton.get("/reports").setCaption(
                 "Reports<span class=\"badge\">" + badgeCount + "</span>");
     }
 
-    void clearDashboardButtonBadge() {
+    public void clearDashboardButtonBadge() {
         viewNameToMenuButton.get("/dashboard").setCaption("Dashboard");
     }
 
@@ -471,8 +476,15 @@ public class DashboardUI extends UI {
         viewNameToMenuButton.get("/reports").addStyleName("selected");
     }
 
-    HelpManager getHelpManager() {
+    public HelpManager getHelpManager() {
         return helpManager;
+    }
+
+    /**
+     * @return the dataProvider
+     */
+    public DataProvider getDataProvider() {
+        return dataProvider;
     }
 
 }
