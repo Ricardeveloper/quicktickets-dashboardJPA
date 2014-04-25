@@ -1,25 +1,21 @@
 /**
  * DISCLAIMER
- * 
+ *
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
- * 
+ *
  * @author jouni@vaadin.com
- * 
+ *
  */
-
-package com.vaadin.demo.dashboard;
-
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Set;
+package com.vaadin.demo.dashboard.view;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.TransactionsContainer;
 import com.vaadin.event.Action;
@@ -28,7 +24,6 @@ import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -43,10 +38,13 @@ import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Set;
 
-public class TransactionsView extends VerticalLayout implements View {
+public class TransactionsView extends GandallView {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,7 +56,7 @@ public class TransactionsView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-        data = ((DashboardUI) getUI()).dataProvider.getTransactions();
+        data = ((DashboardUI) getUI()).getDataProvider().getTransactions();
 
         setSizeFull();
         addStyleName("transactions");
@@ -96,8 +94,8 @@ public class TransactionsView extends VerticalLayout implements View {
         t.setColumnAlignment("Seats", Align.RIGHT);
         t.setColumnAlignment("Price", Align.RIGHT);
 
-        t.setVisibleColumns(new Object[] { "Time", "Country", "City",
-                "Theater", "Room", "Title", "Seats", "Price" });
+        t.setVisibleColumns(new Object[]{"Time", "Country", "City",
+            "Theater", "Room", "Title", "Seats", "Price"});
 
         t.setFooterVisible(true);
         t.setColumnFooter("Time", "Total");
@@ -120,7 +118,6 @@ public class TransactionsView extends VerticalLayout implements View {
         // return f;
         // }
         // });
-
         // Double click to edit
         // t.addItemClickListener(new ItemClickListener() {
         // @Override
@@ -137,7 +134,6 @@ public class TransactionsView extends VerticalLayout implements View {
         // }
         // }
         // });
-
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.setWidth("100%");
         toolbar.setSpacing(true);
@@ -179,8 +175,9 @@ public class TransactionsView extends VerticalLayout implements View {
                     public boolean appliesToProperty(Object propertyId) {
                         if (propertyId.equals("Country")
                                 || propertyId.equals("City")
-                                || propertyId.equals("Title"))
+                                || propertyId.equals("Title")) {
                             return true;
+                        }
                         return false;
                     }
                 });
@@ -202,12 +199,12 @@ public class TransactionsView extends VerticalLayout implements View {
         filter.setInputPrompt("Filter");
         filter.addShortcutListener(new ShortcutListener("Clear",
                 KeyCode.ESCAPE, null) {
-            @Override
-            public void handleAction(Object sender, Object target) {
-                filter.setValue("");
-                data.removeAllContainerFilters();
-            }
-        });
+                    @Override
+                    public void handleAction(Object sender, Object target) {
+                        filter.setValue("");
+                        data.removeAllContainerFilters();
+                    }
+                });
         toolbar.addComponent(filter);
         toolbar.setExpandRatio(filter, 1);
         toolbar.setComponentAlignment(filter, Alignment.MIDDLE_LEFT);
@@ -227,7 +224,6 @@ public class TransactionsView extends VerticalLayout implements View {
         // });
         // refresh.addStyleName("small");
         // toolbar.addComponent(refresh);
-
         final Button newReport = new Button("Create Report From Selection");
         newReport.addClickListener(new ClickListener() {
             @Override
@@ -271,7 +267,7 @@ public class TransactionsView extends VerticalLayout implements View {
 
             @Override
             public Action[] getActions(Object target, Object sender) {
-                return new Action[] { details, report, discard };
+                return new Action[]{details, report, discard};
             }
         });
 
@@ -303,7 +299,6 @@ public class TransactionsView extends VerticalLayout implements View {
         // return null;
         // }
         // });
-
         t.addGeneratedColumn("Title", new ColumnGenerator() {
             @Override
             public Object generateCell(Table source, Object itemId,
@@ -326,17 +321,19 @@ public class TransactionsView extends VerticalLayout implements View {
     }
 
     private void sortTable() {
-        t.sort(new Object[] { "timestamp" }, new boolean[] { false });
+        t.sort(new Object[]{"timestamp"}, new boolean[]{false});
     }
 
     private boolean filterByProperty(String prop, Item item, String text) {
         if (item == null || item.getItemProperty(prop) == null
-                || item.getItemProperty(prop).getValue() == null)
+                || item.getItemProperty(prop).getValue() == null) {
             return false;
+        }
         String val = item.getItemProperty(prop).getValue().toString().trim()
                 .toLowerCase();
-        if (val.startsWith(text.toLowerCase().trim()))
+        if (val.startsWith(text.toLowerCase().trim())) {
             return true;
+        }
         // String[] parts = text.split(" ");
         // for (String part : parts) {
         // if (val.contains(part.toLowerCase()))

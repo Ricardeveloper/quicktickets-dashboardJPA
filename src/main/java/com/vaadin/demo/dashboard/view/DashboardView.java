@@ -1,24 +1,24 @@
 /**
  * DISCLAIMER
- * 
+ *
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
- * 
+ *
  * @author jouni@vaadin.com
- * 
+ *
  */
+package com.vaadin.demo.dashboard.view;
 
-package com.vaadin.demo.dashboard;
-
-import java.text.DecimalFormat;
-
+import com.google.common.eventbus.EventBus;
 import com.vaadin.data.Property;
+import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.TopGrossingMoviesChart;
+import com.vaadin.demo.dashboard.TopSixTheatersChart;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -39,12 +39,18 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.text.DecimalFormat;
 
-public class DashboardView extends VerticalLayout implements View {
+public class DashboardView extends GandallView {
 
     Table t;
 
-    public DashboardView() {
+    public DashboardView(final EventBus eventBus) {
+        
+        setViewName("dashboard");
+        
+        setEventBus(eventBus);
+        
         setSizeFull();
         addStyleName("dashboard-view");
 
@@ -74,9 +80,9 @@ public class DashboardView extends VerticalLayout implements View {
                 event.getButton().removeStyleName("unread");
                 event.getButton().setDescription("Notifications");
 
-                if (notifications != null && notifications.getUI() != null)
+                if (notifications != null && notifications.getUI() != null) {
                     notifications.close();
-                else {
+                } else {
                     buildNotifications(event);
                     getUI().addWindow(notifications);
                     notifications.focus();
@@ -86,7 +92,7 @@ public class DashboardView extends VerticalLayout implements View {
                                 public void layoutClick(LayoutClickEvent event) {
                                     notifications.close();
                                     ((CssLayout) getUI().getContent())
-                                            .removeLayoutClickListener(this);
+                                    .removeLayoutClickListener(this);
                                 }
                             });
                 }
@@ -115,6 +121,7 @@ public class DashboardView extends VerticalLayout implements View {
 
                 w.setContent(new VerticalLayout() {
                     TextField name = new TextField("Dashboard Name");
+
                     {
                         addComponent(new FormLayout() {
                             {
@@ -250,7 +257,7 @@ public class DashboardView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeEvent event) {
-        DataProvider dataProvider = ((DashboardUI) getUI()).dataProvider;
+        DataProvider dataProvider = ((DashboardUI) getUI()).getDataProvider();
         t.setContainerDataSource(dataProvider.getRevenueByTitle());
     }
 
@@ -273,11 +280,11 @@ public class DashboardView extends VerticalLayout implements View {
 
         Label label = new Label(
                 "<hr><b>"
-                        + Generator.randomFirstName()
-                        + " "
-                        + Generator.randomLastName()
-                        + " created a new report</b><br><span>25 minutes ago</span><br>"
-                        + Generator.randomText(18), ContentMode.HTML);
+                + Generator.randomFirstName()
+                + " "
+                + Generator.randomLastName()
+                + " created a new report</b><br><span>25 minutes ago</span><br>"
+                + Generator.randomText(18), ContentMode.HTML);
         l.addComponent(label);
 
         label = new Label("<hr><b>" + Generator.randomFirstName() + " "

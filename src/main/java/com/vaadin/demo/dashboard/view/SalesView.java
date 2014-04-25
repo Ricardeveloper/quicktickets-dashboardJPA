@@ -1,26 +1,21 @@
 /**
  * DISCLAIMER
- * 
+ *
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
- * 
+ *
  * @author jouni@vaadin.com
- * 
+ *
  */
-
-package com.vaadin.demo.dashboard;
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Date;
+package com.vaadin.demo.dashboard.view;
 
 import com.vaadin.addon.timeline.Timeline;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.DataProvider.Movie;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -29,15 +24,17 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Date;
 
-public class SalesView extends VerticalLayout implements View {
+public class SalesView extends GandallView {
 
     private Timeline timeline;
 
-    Color[] colors = new Color[] { new Color(52, 154, 255),
-            new Color(242, 81, 57), new Color(255, 201, 35),
-            new Color(83, 220, 164) };
+    Color[] colors = new Color[]{new Color(52, 154, 255),
+        new Color(242, 81, 57), new Color(255, 201, 35),
+        new Color(83, 220, 164)};
     int colorIndex = -1;
 
     @Override
@@ -66,11 +63,11 @@ public class SalesView extends VerticalLayout implements View {
         movieSelect.addShortcutListener(new ShortcutListener("Add",
                 KeyCode.ENTER, null) {
 
-            @Override
-            public void handleAction(Object sender, Object target) {
-                addSelectedMovie(movieSelect);
-            }
-        });
+                    @Override
+                    public void handleAction(Object sender, Object target) {
+                        addSelectedMovie(movieSelect);
+                    }
+                });
 
         Button add = new Button("Add");
         add.addStyleName("default");
@@ -109,15 +106,17 @@ public class SalesView extends VerticalLayout implements View {
         int i = 0;
         for (Movie m : DataProvider.getMovies()) {
             addDataSet(m.title);
-            if (++i > 3)
+            if (++i > 3) {
                 break;
+            }
         }
 
         Date start = new Date();
         start.setMonth(start.getMonth() - 2);
         Date end = new Date();
-        if (timeline.getGraphDatasources().size() > 0)
+        if (timeline.getGraphDatasources().size() > 0) {
             timeline.setVisibleDateRange(start, end);
+        }
 
     }
 
@@ -132,7 +131,7 @@ public class SalesView extends VerticalLayout implements View {
     }
 
     private void addDataSet(String title) {
-        IndexedContainer revenue = ((DashboardUI) getUI()).dataProvider
+        IndexedContainer revenue = ((DashboardUI) getUI()).getDataProvider()
                 .getRevenueForTitle(title);
         timeline.addGraphDataSource(revenue, "timestamp", "revenue");
         colorIndex = (colorIndex >= colors.length - 1 ? 0 : ++colorIndex);

@@ -1,26 +1,26 @@
 /**
  * DISCLAIMER
- * 
+ *
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
- * 
+ *
  * @author jouni@vaadin.com
- * 
+ *
  */
-
 package com.vaadin.demo.dashboard;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-
+import com.google.common.eventbus.EventBus;
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.demo.dashboard.controller.ViewChangeSecurityChecker;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.demo.dashboard.data.MyConverterFactory;
-import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.ShortcutListener;
+import com.vaadin.demo.dashboard.view.DashboardView;
+import com.vaadin.demo.dashboard.view.GandallView;
+import com.vaadin.demo.dashboard.view.LoginView;
+import com.vaadin.demo.dashboard.view.ReportsView;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -31,9 +31,10 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.WrappedHttpSession;
+import com.vaadin.server.WrappedSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -49,17 +50,31 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+@PreserveOnRefresh
 @Theme("dashboard")
 @Title("QuickTickets Dashboard")
 public class DashboardUI extends UI {
 
-    DataProvider dataProvider = new DataProvider();
+    private final EventBus bus = new EventBus();
+
+    private ApplicationContext applicationContext;
+
+    private final DataProvider dataProvider = new DataProvider();
 
     private static final long serialVersionUID = 1L;
 
@@ -72,15 +87,16 @@ public class DashboardUI extends UI {
 
     HashMap<String, Class<? extends View>> routes = new HashMap<String, Class<? extends View>>() {
         {
+            put("/login", LoginView.class);
             put("/dashboard", DashboardView.class);
-            put("/sales", SalesView.class);
-            put("/transactions", TransactionsView.class);
-            put("/reports", ReportsView.class);
-            put("/schedule", ScheduleView.class);
+            //put("/sales", SalesView.class);
+            //put("/transactions", TransactionsView.class);
+            //put("/reports", ReportsView.class);
+            //put("/schedule", ScheduleView.class);
         }
     };
 
-    HashMap<String, Button> viewNameToMenuButton = new HashMap<String, Button>();
+    HashMap<String, Button> viewNameToMenuButton = new HashMap<>();
 
     private Navigator nav;
 
@@ -88,8 +104,11 @@ public class DashboardUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
+
         getSession().setConverterFactory(new MyConverterFactory());
 
+        //configureApplication();
+        //initApplication();
         helpManager = new HelpManager(this);
 
         setLocale(Locale.US);
@@ -105,121 +124,61 @@ public class DashboardUI extends UI {
         bg.addStyleName("login-bg");
         root.addComponent(bg);
 
-        buildLoginView(false);
-
+        initiateSystemNavigation(request);
     }
 
-    private void buildLoginView(boolean exit) {
-        if (exit) {
-            root.removeAllComponents();
-        }
-        helpManager.closeAll();
-        HelpOverlay w = helpManager
-                .addOverlay(
-                        "Welcome to the Dashboard Demo Application",
-                        "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
-                        "login");
-        w.center();
-        addWindow(w);
+    private void initiateSystemNavigation(VaadinRequest request) {
 
-        addStyleName("login");
+        WrappedSession session = request.getWrappedSession();
+        HttpSession httpSession = ((WrappedHttpSession) session).getHttpSession();
+        ServletContext servletContext = httpSession.getServletContext();
+        applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 
-        loginLayout = new VerticalLayout();
-        loginLayout.setSizeFull();
-        loginLayout.addStyleName("login-layout");
-        root.addComponent(loginLayout);
+        Navigator navigator = new Navigator(this, content);
 
-        final CssLayout loginPanel = new CssLayout();
-        loginPanel.addStyleName("login-panel");
+        // check that users are authenticated before calling any view
+        navigator.addViewChangeListener(new ViewChangeSecurityChecker());
 
-        HorizontalLayout labels = new HorizontalLayout();
-        labels.setWidth("100%");
-        labels.setMargin(true);
-        labels.addStyleName("labels");
-        loginPanel.addComponent(labels);
+        routes.keySet().stream().forEach((route) -> {
 
-        Label welcome = new Label("Welcome");
-        welcome.setSizeUndefined();
-        welcome.addStyleName("h4");
-        labels.addComponent(welcome);
-        labels.setComponentAlignment(welcome, Alignment.MIDDLE_LEFT);
+            // dynamically register view and send eventBus notification
+            Class<GandallView> _tempClass;
 
-        Label title = new Label("QuickTickets Dashboard");
-        title.setSizeUndefined();
-        title.addStyleName("h2");
-        title.addStyleName("light");
-        labels.addComponent(title);
-        labels.setComponentAlignment(title, Alignment.MIDDLE_RIGHT);
+            try {
+                _tempClass = (Class<GandallView>) Class.forName(routes.get(route).getCanonicalName());
 
-        HorizontalLayout fields = new HorizontalLayout();
-        fields.setSpacing(true);
-        fields.setMargin(true);
-        fields.addStyleName("fields");
+                Class[] cArg = new Class[1];
+                cArg[0] = EventBus.class;
 
-        final TextField username = new TextField("Username");
-        username.focus();
-        fields.addComponent(username);
-
-        final PasswordField password = new PasswordField("Password");
-        fields.addComponent(password);
-
-        final Button signin = new Button("Sign In");
-        signin.addStyleName("default");
-        fields.addComponent(signin);
-        fields.setComponentAlignment(signin, Alignment.BOTTOM_LEFT);
-
-        final ShortcutListener enter = new ShortcutListener("Sign In",
-                KeyCode.ENTER, null) {
-            @Override
-            public void handleAction(Object sender, Object target) {
-                signin.click();
+                Constructor constructor = _tempClass.getDeclaredConstructor(cArg);
+                GandallView view = _tempClass.cast(constructor.newInstance(bus));
+                
+                 navigator.addView(route, view);
             }
-        };
-
-        signin.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (username.getValue() != null
-                        && username.getValue().equals("")
-                        && password.getValue() != null
-                        && password.getValue().equals("")) {
-                    signin.removeShortcutListener(enter);
-                    buildMainView();
-                } else {
-                    if (loginPanel.getComponentCount() > 2) {
-                        // Remove the previous error message
-                        loginPanel.removeComponent(loginPanel.getComponent(2));
-                    }
-                    // Add new error message
-                    Label error = new Label(
-                            "Wrong username or password. <span>Hint: try empty values</span>",
-                            ContentMode.HTML);
-                    error.addStyleName("error");
-                    error.setSizeUndefined();
-                    error.addStyleName("light");
-                    // Add animation
-                    error.addStyleName("v-animate-reveal");
-                    loginPanel.addComponent(error);
-                    username.focus();
-                }
+            catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException ex) {
+                Logger.getLogger(DashboardUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         });
 
-        signin.addShortcutListener(enter);
+        navigator.navigateTo("/login");
 
-        loginPanel.addComponent(fields);
+        setNavigator(navigator);
 
-        loginLayout.addComponent(loginPanel);
-        loginLayout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
+        bus.register(this);
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     private void buildMainView() {
 
         nav = new Navigator(this, content);
 
-        for (String route : routes.keySet()) {
+        routes.keySet().stream().forEach((route) -> {
             nav.addView(route, routes.get(route));
-        }
+        });
 
         helpManager.closeAll();
         removeStyleName("login");
@@ -297,7 +256,7 @@ public class DashboardUI extends UI {
                                 exit.addClickListener(new ClickListener() {
                                     @Override
                                     public void buttonClick(ClickEvent event) {
-                                        buildLoginView(true);
+                                        //buildLoginView(true);
                                     }
                                 });
                             }
@@ -315,8 +274,8 @@ public class DashboardUI extends UI {
 
         menu.removeAllComponents();
 
-        for (final String view : new String[] { "dashboard", "sales",
-                "transactions", "reports", "schedule" }) {
+        for (final String view : new String[]{"dashboard", "sales",
+            "transactions", "reports", "schedule"}) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));
             b.addStyleName("icon-" + view);
@@ -325,8 +284,9 @@ public class DashboardUI extends UI {
                 public void buttonClick(ClickEvent event) {
                     clearMenuSelection();
                     event.getButton().addStyleName("selected");
-                    if (!nav.getState().equals("/" + view))
+                    if (!nav.getState().equals("/" + view)) {
                         nav.navigateTo("/" + view);
+                    }
                 }
             });
 
@@ -418,13 +378,13 @@ public class DashboardUI extends UI {
         }
     }
 
-    void updateReportsButtonBadge(String badgeCount) {
+    public void updateReportsButtonBadge(String badgeCount) {
         viewNameToMenuButton.get("/reports").setHtmlContentAllowed(true);
         viewNameToMenuButton.get("/reports").setCaption(
                 "Reports<span class=\"badge\">" + badgeCount + "</span>");
     }
 
-    void clearDashboardButtonBadge() {
+    public void clearDashboardButtonBadge() {
         viewNameToMenuButton.get("/dashboard").setCaption("Dashboard");
     }
 
@@ -439,8 +399,15 @@ public class DashboardUI extends UI {
         viewNameToMenuButton.get("/reports").addStyleName("selected");
     }
 
-    HelpManager getHelpManager() {
+    public HelpManager getHelpManager() {
         return helpManager;
+    }
+
+    /**
+     * @return the dataProvider
+     */
+    public DataProvider getDataProvider() {
+        return dataProvider;
     }
 
 }

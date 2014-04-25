@@ -10,27 +10,26 @@
 
 package com.vaadin.demo.dashboard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.navigator.View;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelpManager {
 
-    private UI ui;
-    private List<HelpOverlay> overlays = new ArrayList<HelpOverlay>();
+    private final UI ui;
+    private final List<HelpOverlay> overlays = new ArrayList<>();
 
     public HelpManager(UI ui) {
         this.ui = ui;
     }
 
     public void closeAll() {
-        for (HelpOverlay overlay : overlays) {
+        overlays.stream().forEach((overlay) -> {
             overlay.close();
-        }
+        });
         overlays.clear();
     }
 
@@ -72,7 +71,7 @@ public class HelpManager {
         // }
     }
 
-    protected HelpOverlay addOverlay(String caption, String text, String style) {
+    public HelpOverlay addOverlay(String caption, String text, String style) {
         HelpOverlay o = new HelpOverlay();
         o.setCaption(caption);
         o.addComponent(new Label(text, ContentMode.HTML));
