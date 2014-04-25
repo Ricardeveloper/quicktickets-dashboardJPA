@@ -28,7 +28,6 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
@@ -69,7 +68,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
-public class ReportsView extends HorizontalLayout implements View {
+public class ReportsView extends GandallView {
 
     private TabSheet editors;
 

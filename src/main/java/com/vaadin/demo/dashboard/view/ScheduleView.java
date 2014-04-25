@@ -1,13 +1,12 @@
 /**
  * DISCLAIMER
- * 
+ *
  * The quality of the code is such that you should not copy any of it as best
  * practice how to build Vaadin applications.
- * 
+ *
  * @author jouni@vaadin.com
- * 
+ *
  */
-
 package com.vaadin.demo.dashboard.view;
 
 import com.vaadin.demo.dashboard.MovieDetailsWindow;
@@ -19,7 +18,6 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
@@ -58,21 +56,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ScheduleView extends CssLayout implements View {
+public class ScheduleView extends GandallView {
 
     private CssLayout catalog;
 
     private Window popup;
 
     // private CSSInject css;
-
     @Override
     public void enter(ViewChangeEvent event) {
         setSizeFull();
         addStyleName("schedule");
 
         // css = new CSSInject(UI.getCurrent());
-
         TabSheet tabs = new TabSheet();
         tabs.setSizeFull();
         tabs.addStyleName("borderless");
@@ -120,7 +116,6 @@ public class ScheduleView extends CssLayout implements View {
 
         // cal.setStartDate(new Date());
         // cal.setEndDate(new Date());
-
         cal.setHandler(new EventClickHandler() {
             @Override
             public void eventClick(EventClick event) {
@@ -305,13 +300,15 @@ public class ScheduleView extends CssLayout implements View {
             date.setHours(end.getHours());
             date.setMinutes((int) (end.getMinutes() + 15 + (Math.random() * 60)));
 
-            if (date.getDate() > day.getDate())
+            if (date.getDate() > day.getDate()) {
                 break;
+            }
         }
 
     }
 
     class MovieEventProvider implements CalendarEventProvider {
+
         private List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 
         @Override
@@ -378,8 +375,9 @@ public class ScheduleView extends CssLayout implements View {
     HorizontalLayout tray;
 
     void buildTray() {
-        if (tray != null)
+        if (tray != null) {
             return;
+        }
 
         tray = new HorizontalLayout();
         tray.setWidth("100%");
@@ -418,7 +416,6 @@ public class ScheduleView extends CssLayout implements View {
     }
 
     // boolean helpShown = false;
-
     void showTray() {
         buildTray();
         tray.removeStyleName("v-animate-hide");
@@ -427,8 +424,9 @@ public class ScheduleView extends CssLayout implements View {
     }
 
     void hideTray() {
-        if (tray != null)
+        if (tray != null) {
             removeComponent(tray);
+        }
     }
 
 }

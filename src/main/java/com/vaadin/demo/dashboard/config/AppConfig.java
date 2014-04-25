@@ -6,8 +6,8 @@
 package com.vaadin.demo.dashboard.config;
 
 import com.vaadin.demo.dashboard.controller.AuthManager;
-import com.vaadin.demo.dashboard.controller.LoginListener;
 import com.vaadin.demo.dashboard.controller.UserService;
+import com.vaadin.demo.dashboard.listener.LoginListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,18 +22,17 @@ public class AppConfig {
 
     @Bean
     public AuthManager authManager() {
-        AuthManager res = new AuthManager();
-        return res;
+        return new AuthManager();
     }
 
     @Bean
     public UserService userService() {
-        UserService res = new UserService();
-        return res;
+        return new UserService();
     }
 
     @Bean
     public LoginListener loginListener() {
         return new LoginListener();
     }
+
 }

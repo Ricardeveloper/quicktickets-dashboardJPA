@@ -5,8 +5,9 @@
  */
 package com.vaadin.demo.dashboard.view.form;
 
+import com.google.common.eventbus.EventBus;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.controller.LoginListener;
+import com.vaadin.demo.dashboard.listener.LoginListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Alignment;
@@ -31,7 +32,7 @@ public class LoginForm extends HorizontalLayout {
     private final TextField username = new TextField("Username");
     private final PasswordField password = new PasswordField("Password");
 
-    public LoginForm() {
+    public LoginForm(final EventBus eventBus) {
 
         loginLayout = new VerticalLayout();
         loginLayout.setSizeFull();
@@ -89,6 +90,7 @@ public class LoginForm extends HorizontalLayout {
 
         LoginListener loginListener = getLoginListener();
 
+        loginListener.setEventBus(eventBus);
         signin.addClickListener(loginListener);
 
         signin.addShortcutListener(enter);

@@ -1,6 +1,6 @@
 package com.vaadin.demo.dashboard.controller;
 
-import com.vaadin.demo.dashboard.LoginView;
+import com.vaadin.demo.dashboard.view.LoginView;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import org.springframework.security.core.Authentication;

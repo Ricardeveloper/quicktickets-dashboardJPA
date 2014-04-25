@@ -9,6 +9,7 @@
  */
 package com.vaadin.demo.dashboard.view;
 
+import com.google.common.eventbus.EventBus;
 import com.vaadin.data.Property;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.TopGrossingMoviesChart;
@@ -18,7 +19,6 @@ import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -41,11 +41,16 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.text.DecimalFormat;
 
-public class DashboardView extends VerticalLayout implements View {
+public class DashboardView extends GandallView {
 
     Table t;
 
-    public DashboardView() {
+    public DashboardView(final EventBus eventBus) {
+        
+        setViewName("dashboard");
+        
+        setEventBus(eventBus);
+        
         setSizeFull();
         addStyleName("dashboard-view");
 

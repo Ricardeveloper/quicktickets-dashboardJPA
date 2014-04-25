@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.vaadin.demo.dashboard;
+package com.vaadin.demo.dashboard.view;
 
+import com.google.common.eventbus.EventBus;
+import com.vaadin.demo.dashboard.HelpManager;
+import com.vaadin.demo.dashboard.HelpOverlay;
 import com.vaadin.demo.dashboard.view.form.LoginForm;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
@@ -16,20 +11,21 @@ import com.vaadin.ui.Window;
  *
  * @author muaz.cisse
  */
-public class LoginView extends HorizontalLayout implements View {
-
-    public static final String NAME = "login";
+public class LoginView extends GandallView {
 
     Window notifications;
 
     private final HelpManager helpManager;
 
-    public LoginView() {
+    public LoginView(final EventBus eventBus) {
 
+        setViewName("login");
+        
+        setEventBus(eventBus);
+        
         notifications = new Window("HelpManager");
 
         helpManager = new HelpManager(notifications.getUI());
-
         helpManager.closeAll();
         HelpOverlay w = helpManager
                 .addOverlay(
@@ -42,14 +38,9 @@ public class LoginView extends HorizontalLayout implements View {
 
         addStyleName("login");
 
-        LoginForm loginForm = new LoginForm();
+        LoginForm loginForm = new LoginForm(getEventBus());
         addComponent(loginForm);
 
-    }
-
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent event) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
