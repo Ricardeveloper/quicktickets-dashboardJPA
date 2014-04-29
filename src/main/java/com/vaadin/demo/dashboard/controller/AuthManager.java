@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaadin.demo.dashboard.controller;
 
 import java.io.Serializable;
@@ -53,12 +48,6 @@ public class AuthManager implements AuthenticationManager, Serializable {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken("Muaz", "1234");
 
         token.setDetails(new WebAuthenticationDetails(httpRequest));
-
-        ServletContext servletContext = httpRequest.getSession().getServletContext();
-
-        WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-
-        AuthenticationManager authManager = wac.getBean(AuthenticationManager.class);
 
         Authentication authentication = authenticate(token);
 

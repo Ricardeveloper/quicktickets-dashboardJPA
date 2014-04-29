@@ -1,38 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaadin.demo.dashboard.config;
-
-import com.vaadin.demo.dashboard.controller.AuthManager;
-import com.vaadin.demo.dashboard.controller.UserService;
-import com.vaadin.demo.dashboard.listener.LoginListener;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 /**
  *
  * @author muaz.cisse
  */
+import org.springframework.config.java.support.ConfigurationSupport;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+
 @Configuration
-@ComponentScan(basePackages = {"com.app.ui", "com.app.auth", "com.app.service"})
-public class AppConfig {
+@ImportResource({"classpath:**/applicationContext.xml", "classpath:**/applicationContext-security.xml"})
+//@ImportXml("classpath:com/company/app/datasource-config.xml")
+//@ComponentScan(basePackages = {"com.vaadin.demo.dashboard"})
+public class AppConfig extends ConfigurationSupport {
 
-    @Bean
-    public AuthManager authManager() {
-        return new AuthManager();
-    }
 
-    @Bean
-    public UserService userService() {
-        return new UserService();
-    }
+    /*
+     @Bean
+     public AuthManager authManager() {
+     return new AuthManager();
+     }
 
-    @Bean
-    public LoginListener loginListener() {
-        return new LoginListener();
-    }
+     @Bean
+     public UserService userService() {
+     return new UserService();
+     }
 
+     @Bean
+     public LoginListener loginListener() {
+     return new LoginListener();
+     }
+     */
 }

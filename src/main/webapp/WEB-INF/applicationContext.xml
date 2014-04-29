@@ -9,6 +9,12 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
+    <import resource="datasource-config.xml" />
+    <import resource="security-config.xml" />
+    
+    <context:annotation-config />
+    <context:component-scan base-package="com.vaadin.demo.dashboard" />
+    
     <!--bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
           p:location="/WEB-INF/jdbc.properties" />
@@ -21,5 +27,7 @@
     p:password="${jdbc.password}" /-->
 
     <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
+    
+    <bean id="testBean" class="com.vaadin.demo.dashboard.test.TestBean" />
 
 </beans>
