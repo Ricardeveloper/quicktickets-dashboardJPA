@@ -17,7 +17,6 @@ import com.vaadin.demo.dashboard.controller.ViewChangeSecurityChecker;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.demo.dashboard.data.MyConverterFactory;
-import com.vaadin.demo.dashboard.test.TestBean;
 import com.vaadin.demo.dashboard.view.DashboardView;
 import com.vaadin.demo.dashboard.view.GandallView;
 import com.vaadin.demo.dashboard.view.LoginView;
@@ -29,31 +28,20 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.Page;
-import com.vaadin.server.ThemeResource;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.WrappedHttpSession;
-import com.vaadin.server.WrappedSession;
+import com.vaadin.server.*;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -61,31 +49,19 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 @PreserveOnRefresh
 @Theme("dashboard")
 @Title("QuickTickets Dashboard")
 public class DashboardUI extends UI {
 
-    private final EventBus bus = new EventBus();
-
-    private ApplicationContext applicationContext;
-
-    private final DataProvider dataProvider = new DataProvider();
-
     private static final long serialVersionUID = 1L;
-
+    private final EventBus bus = new EventBus();
+    private final DataProvider dataProvider = new DataProvider();
     CssLayout root = new CssLayout();
-
     VerticalLayout loginLayout;
-
     CssLayout menu = new CssLayout();
     CssLayout content = new CssLayout();
-
     HashMap<String, Class<? extends View>> routes = new HashMap<String, Class<? extends View>>() {
         {
             put("/login", LoginView.class);
@@ -96,12 +72,13 @@ public class DashboardUI extends UI {
             //put("/schedule", ScheduleView.class);
         }
     };
-
     HashMap<String, Button> viewNameToMenuButton = new HashMap<>();
-
+    boolean autoCreateReport = false;
+    Table transactions;
+    private ApplicationContext applicationContext;
     private Navigator nav;
-
     private HelpManager helpManager;
+    private Transferable items;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -135,9 +112,6 @@ public class DashboardUI extends UI {
         ServletContext servletContext = httpSession.getServletContext();
         applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 
-        TestBean testBean = (TestBean) applicationContext.getBean("testBean");
-        testBean.run();
-        
         Navigator navigator = new Navigator(this, content);
 
         // check that users are authenticated before calling any view
@@ -156,10 +130,9 @@ public class DashboardUI extends UI {
 
                 Constructor constructor = _tempClass.getDeclaredConstructor(cArg);
                 GandallView view = _tempClass.cast(constructor.newInstance(bus));
-                
-                 navigator.addView(route, view);
-            }
-            catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException ex) {
+
+                navigator.addView(route, view);
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException ex) {
                 Logger.getLogger(DashboardUI.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -279,7 +252,7 @@ public class DashboardUI extends UI {
         menu.removeAllComponents();
 
         for (final String view : new String[]{"dashboard", "sales",
-            "transactions", "reports", "schedule"}) {
+                "transactions", "reports", "schedule"}) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));
             b.addStyleName("icon-" + view);
@@ -367,10 +340,8 @@ public class DashboardUI extends UI {
 
     }
 
-    private Transferable items;
-
     private void clearMenuSelection() {
-        for (Iterator<Component> it = menu.getComponentIterator(); it.hasNext();) {
+        for (Iterator<Component> it = menu.getComponentIterator(); it.hasNext(); ) {
             Component next = it.next();
             if (next instanceof NativeButton) {
                 next.removeStyleName("selected");
@@ -391,9 +362,6 @@ public class DashboardUI extends UI {
     public void clearDashboardButtonBadge() {
         viewNameToMenuButton.get("/dashboard").setCaption("Dashboard");
     }
-
-    boolean autoCreateReport = false;
-    Table transactions;
 
     public void openReports(Table t) {
         transactions = t;

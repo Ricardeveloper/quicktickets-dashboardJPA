@@ -10,15 +10,7 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.listener.LoginListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -27,10 +19,9 @@ import org.springframework.context.ApplicationContext;
  */
 public class LoginForm extends HorizontalLayout {
 
-    VerticalLayout loginLayout;
-
     private final TextField username = new TextField("Username");
     private final PasswordField password = new PasswordField("Password");
+    VerticalLayout loginLayout;
 
     public LoginForm(final EventBus eventBus) {
 
@@ -67,8 +58,8 @@ public class LoginForm extends HorizontalLayout {
         fields.setMargin(true);
         fields.addStyleName("fields");
 
-        username.setValue("TEST");
-        username.setNullRepresentation("");
+        //username.setValue("TEST");
+        //username.setNullRepresentation("");
         username.focus();
         fields.addComponent(username);
 
