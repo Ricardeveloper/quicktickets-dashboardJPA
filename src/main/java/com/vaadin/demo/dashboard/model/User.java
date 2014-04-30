@@ -1,15 +1,14 @@
 package com.vaadin.demo.dashboard.model;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
- *
  * @author muaz.cisse
  */
-@Component
+@Repository
 public class User {
-    
-    private String name; 
+
+    private String name;
 
     /**
      * @return the name
@@ -24,5 +23,5 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }

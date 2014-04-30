@@ -6,7 +6,6 @@
 package com.vaadin.demo.dashboard.test;
 
 /**
- *
  * @author Muaz Cisse
  */
 public class TestBean {
@@ -16,7 +15,8 @@ public class TestBean {
     }
 
     public void run() {
-        System.out.println("RUn BeanTested");
+        String txt = "RUn BeanTested  ggg";
+        System.out.println(txt);
     }
 
 }

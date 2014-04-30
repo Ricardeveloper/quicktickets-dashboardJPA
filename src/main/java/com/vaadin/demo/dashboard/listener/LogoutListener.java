@@ -10,13 +10,12 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 /**
- *
  * @author muaz.cisse
  */
-@Component
+@Controller
 public class LogoutListener extends GandallListener {
 
     @Autowired

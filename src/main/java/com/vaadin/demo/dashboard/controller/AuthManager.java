@@ -1,9 +1,5 @@
 package com.vaadin.demo.dashboard.controller;
 
-import java.io.Serializable;
-import java.util.Collection;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,15 +11,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.util.Collection;
+
 /**
- *
  * @author muaz.cisse
  */
-@Component
+@Controller
 public class AuthManager implements AuthenticationManager, Serializable {
 
     @Autowired
@@ -45,7 +45,7 @@ public class AuthManager implements AuthenticationManager, Serializable {
 
     public void handleAuthentication(String login, String password, HttpServletRequest httpRequest) {
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken("Muaz", "1234");
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(login, password);
 
         token.setDetails(new WebAuthenticationDetails(httpRequest));
 
