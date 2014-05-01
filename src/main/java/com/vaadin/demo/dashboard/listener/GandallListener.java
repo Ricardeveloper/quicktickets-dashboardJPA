@@ -6,19 +6,24 @@
 package com.vaadin.demo.dashboard.listener;
 
 import com.google.common.eventbus.EventBus;
+import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.event.LoginEvent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.UI;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
 /**
- *
  * @author Muaz Cisse
  */
 @Controller
 public class GandallListener implements Button.ClickListener {
 
     private EventBus eventBus;
+
     private LoginEvent loginEvent;
+
+    private ApplicationContext applicationContext;
 
     /**
      * @return the eventBus
@@ -51,6 +56,14 @@ public class GandallListener implements Button.ClickListener {
      */
     public void setLoginEvent(LoginEvent loginEvent) {
         this.loginEvent = loginEvent;
+    }
+
+    public ApplicationContext getApplicationContext() {
+
+        DashboardUI ui = (DashboardUI) UI.getCurrent();
+        this.applicationContext = ui.getApplicationContext();
+
+        return this.applicationContext;
     }
 
 }

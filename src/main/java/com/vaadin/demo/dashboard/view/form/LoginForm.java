@@ -5,29 +5,22 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.listener.LoginListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 /**
- *
  * @author muaz.cisse
  */
 @Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class LoginForm extends HorizontalLayout {
-
-    VerticalLayout loginLayout;
 
     private final TextField username = new TextField("Username");
     private final PasswordField password = new PasswordField("Password");
+    VerticalLayout loginLayout;
 
     public LoginForm() {
     }
@@ -82,48 +75,20 @@ public class LoginForm extends HorizontalLayout {
 
         final ShortcutListener enter = new ShortcutListener("Sign In",
                 ShortcutAction.KeyCode.ENTER, null) {
-                    @Override
-                    public void handleAction(Object sender, Object target) {
-                        signin.click();
-                    }
-                };
+            @Override
+            public void handleAction(Object sender, Object target) {
+                signin.click();
+            }
+        };
 
         LoginListener loginListener = getLoginListener();
         loginListener.setEventBus(eventBus);
-        //LoginEvent loginEvent = new LoginEvent(username.getValue(), password.getValue());
+
         signin.addShortcutListener(enter);
         loginPanel.addComponent(fields);
         loginLayout.addComponent(loginPanel);
         loginLayout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 
-        /*
-         signin.addClickListener((Button.ClickEvent event) -> {
-
-         System.out.println(username.getValue());
-
-         //LoginListener loginListener = getLoginListener();
-         //loginListener.setEventBus(eventBus);
-         LoginEvent loginEvent = new LoginEvent(username.getValue(), password.getValue());
-         loginListener.setLoginEvent(loginEvent);
-
-         });
-
-       
-        
-         signin.addClickListener(new ClickListener() {
-
-         @Override
-         public void buttonClick(Button.ClickEvent event) {
-         System.out.println(getUsername().getValue());
-
-         LoginEvent loginEvent = new LoginEvent(getUsername().getValue(), getPassword().getValue());
-
-         //((DashboardUI) UI.getCurrent()).getSession().setAttribute("username", getUsername().getValue());
-         //((DashboardUI) UI.getCurrent()).getSession().setAttribute("password", getPassword().getValue());
-         }
-         });
-        
-         */
         signin.addClickListener(loginListener);
     }
 

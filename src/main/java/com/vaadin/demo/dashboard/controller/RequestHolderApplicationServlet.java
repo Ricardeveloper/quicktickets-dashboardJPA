@@ -1,14 +1,14 @@
 package com.vaadin.demo.dashboard.controller;
 
 import com.vaadin.server.VaadinServlet;
-import java.io.IOException;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.io.IOException;
 
 /**
- *
  * @author muaz.cisse
  */
 public class RequestHolderApplicationServlet extends VaadinServlet {

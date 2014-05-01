@@ -3,7 +3,6 @@ package com.vaadin.demo.dashboard.controller;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
  * @author muaz.cisse
  */
 public class RequestHolder {

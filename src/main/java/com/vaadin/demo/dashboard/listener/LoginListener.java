@@ -5,14 +5,11 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.controller.AuthManager;
 import com.vaadin.demo.dashboard.controller.RequestHolder;
 import com.vaadin.demo.dashboard.event.LoginEvent;
+import com.vaadin.demo.dashboard.util.ControlHelper;
 import com.vaadin.demo.dashboard.view.DashboardView;
-import com.vaadin.demo.dashboard.view.form.LoginForm;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 
@@ -32,18 +29,12 @@ public class LoginListener extends GandallListener {
 
             Button source = event.getButton();
 
-            System.out.println(source.getData());
+            HorizontalLayout loginForm = (HorizontalLayout) source.getParent();
 
-            DashboardUI ui = (DashboardUI) UI.getCurrent();
-            ApplicationContext context = ui.getApplicationContext();
+            String username = ((TextField) loginForm.getComponent(0)).getValue();
+            String password = ((PasswordField) loginForm.getComponent(1)).getValue();
 
-            LoginForm loginForm = context.getBean(LoginForm.class);
-            System.out.println(loginForm.getUsername().getValue());
-
-            String username = (String) (UI.getCurrent()).getSession().getAttribute("username");
-            String password = (String) (UI.getCurrent()).getSession().getAttribute("password");
-
-            LoginEvent loginEvent = new LoginEvent(username, password);
+            LoginEvent loginEvent = (LoginEvent) getApplicationContext().getBean(ControlHelper.getClassLowerCamelName(), new Object[]{username, password});
 
             getEventBus().post(loginEvent);
 
@@ -52,8 +43,8 @@ public class LoginListener extends GandallListener {
             DashboardUI current = (DashboardUI) UI.getCurrent();
             Navigator navigator = current.getNavigator();
             navigator.navigateTo(DashboardView.getViewName());
-        }
-        catch (AuthenticationException e) {
+
+        } catch (AuthenticationException e) {
             Notification.show("Authentication failed: "
                     + e.getMessage());
         }

@@ -4,10 +4,10 @@
  */
 package com.vaadin.demo.dashboard.util;
 
+import com.google.gwt.thirdparty.guava.common.base.CaseFormat;
 import com.vaadin.ui.AbstractComponent;
 
 /**
- *
  * @author muaz.cisse
  */
 public class ControlHelper {
@@ -17,13 +17,13 @@ public class ControlHelper {
     /**
      * Get parent of the control which has a specified type.
      *
-     * @param cls type of the control to return
+     * @param cls     type of the control to return
      * @param control origin control (where to start traversing the tree)
      * @param <T>
      * @return
      */
     public static <T extends AbstractComponent> T getParent(Class<T> cls, AbstractComponent control) {
-        
+
         if (control == null) {
             return null;
         }
@@ -44,5 +44,11 @@ public class ControlHelper {
         }
 
         return null;
+    }
+
+    public static String getClassLowerCamelName() {
+
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, Class.class.getSimpleName());
+
     }
 }

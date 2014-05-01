@@ -1,20 +1,21 @@
 package com.vaadin.demo.dashboard.view;
 
 import com.google.common.eventbus.EventBus;
-import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.HelpManager;
 import com.vaadin.demo.dashboard.HelpOverlay;
+import com.vaadin.demo.dashboard.util.ControlHelper;
 import com.vaadin.demo.dashboard.view.form.LoginForm;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 /**
- *
  * @author muaz.cisse
  */
 @Controller
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class LoginView extends GandallView {
 
     Window notifications;
@@ -45,12 +46,8 @@ public class LoginView extends GandallView {
 
         addStyleName("login");
 
-        DashboardUI ui = (DashboardUI) UI.getCurrent();
-        ApplicationContext context = ui.getApplicationContext();
+        LoginForm loginForm = (LoginForm) getApplicationContext().getBean(ControlHelper.getClassLowerCamelName(), new Object[]{getEventBus()});
 
-        LoginForm loginForm = (LoginForm) context.getBean("loginForm", new Object[]{getEventBus()});
-
-        //LoginForm loginForm = new LoginForm(getEventBus());
         addComponent(loginForm);
 
     }
