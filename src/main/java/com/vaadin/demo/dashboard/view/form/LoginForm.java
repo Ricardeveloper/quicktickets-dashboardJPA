@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaadin.demo.dashboard.view.form;
 
 import com.google.common.eventbus.EventBus;
@@ -10,18 +5,32 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.listener.LoginListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 
 /**
  *
  * @author muaz.cisse
  */
+@Controller
 public class LoginForm extends HorizontalLayout {
+
+    VerticalLayout loginLayout;
 
     private final TextField username = new TextField("Username");
     private final PasswordField password = new PasswordField("Password");
-    VerticalLayout loginLayout;
+
+    public LoginForm() {
+    }
 
     public LoginForm(final EventBus eventBus) {
 
@@ -80,23 +89,48 @@ public class LoginForm extends HorizontalLayout {
                 };
 
         LoginListener loginListener = getLoginListener();
-
         loginListener.setEventBus(eventBus);
-        signin.addClickListener(loginListener);
-
+        //LoginEvent loginEvent = new LoginEvent(username.getValue(), password.getValue());
         signin.addShortcutListener(enter);
         loginPanel.addComponent(fields);
         loginLayout.addComponent(loginPanel);
         loginLayout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
+
+        /*
+         signin.addClickListener((Button.ClickEvent event) -> {
+
+         System.out.println(username.getValue());
+
+         //LoginListener loginListener = getLoginListener();
+         //loginListener.setEventBus(eventBus);
+         LoginEvent loginEvent = new LoginEvent(username.getValue(), password.getValue());
+         loginListener.setLoginEvent(loginEvent);
+
+         });
+
+       
+        
+         signin.addClickListener(new ClickListener() {
+
+         @Override
+         public void buttonClick(Button.ClickEvent event) {
+         System.out.println(getUsername().getValue());
+
+         LoginEvent loginEvent = new LoginEvent(getUsername().getValue(), getPassword().getValue());
+
+         //((DashboardUI) UI.getCurrent()).getSession().setAttribute("username", getUsername().getValue());
+         //((DashboardUI) UI.getCurrent()).getSession().setAttribute("password", getPassword().getValue());
+         }
+         });
+        
+         */
+        signin.addClickListener(loginListener);
     }
 
     private LoginListener getLoginListener() {
 
         DashboardUI ui = (DashboardUI) UI.getCurrent();
         ApplicationContext context = ui.getApplicationContext();
-
-        ((DashboardUI) UI.getCurrent()).getSession().setAttribute("username", getUsername().getValue());
-        ((DashboardUI) UI.getCurrent()).getSession().setAttribute("password", getPassword().getValue());
 
         return context.getBean(LoginListener.class);
     }

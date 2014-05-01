@@ -4,16 +4,22 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.HorizontalLayout;
+import org.springframework.stereotype.Controller;
 
 /**
  *
  * @author muaz.cisse
  */
+@Controller
 public class GandallView extends HorizontalLayout implements View {
 
     private static String viewName;
 
     private EventBus eventBus;
+
+    public GandallView() {
+
+    }
 
     /**
      * @return the viewName
