@@ -17,7 +17,6 @@ import com.vaadin.demo.dashboard.controller.ViewChangeSecurityChecker;
 import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.demo.dashboard.data.MyConverterFactory;
-import com.vaadin.demo.dashboard.test.TestBean;
 import com.vaadin.demo.dashboard.view.DashboardView;
 import com.vaadin.demo.dashboard.view.GandallView;
 import com.vaadin.demo.dashboard.view.LoginView;
@@ -134,9 +133,6 @@ public class DashboardUI extends UI {
         HttpSession httpSession = ((WrappedHttpSession) session).getHttpSession();
         ServletContext servletContext = httpSession.getServletContext();
         applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-
-        TestBean testBean = (TestBean) applicationContext.getBean("testBean");
-        testBean.run();
         
         Navigator navigator = new Navigator(this, content);
 

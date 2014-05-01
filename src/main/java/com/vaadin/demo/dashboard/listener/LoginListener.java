@@ -6,11 +6,13 @@ import com.vaadin.demo.dashboard.controller.AuthManager;
 import com.vaadin.demo.dashboard.controller.RequestHolder;
 import com.vaadin.demo.dashboard.event.LoginEvent;
 import com.vaadin.demo.dashboard.view.DashboardView;
+import com.vaadin.demo.dashboard.view.form.LoginForm;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 
@@ -28,6 +30,16 @@ public class LoginListener extends GandallListener {
     public void buttonClick(Button.ClickEvent event) {
         try {
 
+            Button source = event.getButton();
+
+            System.out.println(source.getData());
+
+            DashboardUI ui = (DashboardUI) UI.getCurrent();
+            ApplicationContext context = ui.getApplicationContext();
+
+            LoginForm loginForm = context.getBean(LoginForm.class);
+            System.out.println(loginForm.getUsername().getValue());
+
             String username = (String) (UI.getCurrent()).getSession().getAttribute("username");
             String password = (String) (UI.getCurrent()).getSession().getAttribute("password");
 
@@ -40,7 +52,8 @@ public class LoginListener extends GandallListener {
             DashboardUI current = (DashboardUI) UI.getCurrent();
             Navigator navigator = current.getNavigator();
             navigator.navigateTo(DashboardView.getViewName());
-        } catch (AuthenticationException e) {
+        }
+        catch (AuthenticationException e) {
             Notification.show("Authentication failed: "
                     + e.getMessage());
         }
