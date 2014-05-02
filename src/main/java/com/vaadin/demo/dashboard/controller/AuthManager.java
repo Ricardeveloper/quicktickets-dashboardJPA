@@ -1,5 +1,10 @@
 package com.vaadin.demo.dashboard.controller;
 
+import com.vaadin.demo.dashboard.event.LoginEvent;
+import java.io.Serializable;
+import java.util.Collection;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,11 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
-import java.util.Collection;
-
 /**
  * @author muaz.cisse
  */
@@ -27,14 +27,14 @@ import java.util.Collection;
 public class AuthManager implements AuthenticationManager, Serializable {
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
 
         String username = (String) auth.getPrincipal();
         String password = (String) auth.getCredentials();
-        UserDetails user = userService.loadUserByUsername(username);
+        UserDetails user = accountService.loadUserByUsername(username);
 
         if (user != null && user.getPassword().equals(password)) {
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
@@ -43,9 +43,9 @@ public class AuthManager implements AuthenticationManager, Serializable {
         throw new BadCredentialsException("Bad Credentials");
     }
 
-    public void handleAuthentication(String login, String password, HttpServletRequest httpRequest) {
+    public void handleAuthentication(LoginEvent loginEvent, HttpServletRequest httpRequest) {
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(login, password);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginEvent.getLogin(), loginEvent.getPassword());
 
         token.setDetails(new WebAuthenticationDetails(httpRequest));
 

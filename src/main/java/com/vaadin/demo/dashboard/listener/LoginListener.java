@@ -8,7 +8,12 @@ import com.vaadin.demo.dashboard.event.LoginEvent;
 import com.vaadin.demo.dashboard.util.ControlHelper;
 import com.vaadin.demo.dashboard.view.DashboardView;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
@@ -34,11 +39,11 @@ public class LoginListener extends GandallListener {
             String username = ((TextField) loginForm.getComponent(0)).getValue();
             String password = ((PasswordField) loginForm.getComponent(1)).getValue();
 
-            LoginEvent loginEvent = (LoginEvent) getApplicationContext().getBean(ControlHelper.getClassLowerCamelName(), new Object[]{username, password});
+            LoginEvent loginEvent = (LoginEvent) getApplicationContext().getBean(ControlHelper.getClassLowerCamelName(LoginEvent.class), new Object[]{username, password});
 
             getEventBus().post(loginEvent);
 
-            authManager.handleAuthentication(username, password, RequestHolder.getRequest());
+            authManager.handleAuthentication(loginEvent, RequestHolder.getRequest());
 
             DashboardUI current = (DashboardUI) UI.getCurrent();
             Navigator navigator = current.getNavigator();

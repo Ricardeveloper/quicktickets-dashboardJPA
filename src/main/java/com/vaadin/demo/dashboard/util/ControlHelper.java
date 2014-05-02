@@ -17,7 +17,7 @@ public class ControlHelper {
     /**
      * Get parent of the control which has a specified type.
      *
-     * @param cls     type of the control to return
+     * @param cls type of the control to return
      * @param control origin control (where to start traversing the tree)
      * @param <T>
      * @return
@@ -46,9 +46,9 @@ public class ControlHelper {
         return null;
     }
 
-    public static String getClassLowerCamelName() {
+    public static String getClassLowerCamelName(Class c) {
 
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, Class.class.getSimpleName());
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, c.getSimpleName());
 
     }
 }

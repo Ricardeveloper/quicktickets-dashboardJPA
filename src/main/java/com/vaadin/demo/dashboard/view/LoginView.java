@@ -45,8 +45,8 @@ public class LoginView extends GandallView {
         UI.getCurrent().addWindow(w);
 
         addStyleName("login");
-
-        LoginForm loginForm = (LoginForm) getApplicationContext().getBean(ControlHelper.getClassLowerCamelName(), new Object[]{getEventBus()});
+    
+        LoginForm loginForm = (LoginForm) getApplicationContext().getBean(ControlHelper.getClassLowerCamelName(LoginForm.class), new Object[]{getEventBus()});
 
         addComponent(loginForm);
 
