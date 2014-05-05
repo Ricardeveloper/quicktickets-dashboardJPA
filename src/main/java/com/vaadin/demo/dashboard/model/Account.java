@@ -1,23 +1,15 @@
 package com.vaadin.demo.dashboard.model;
 
+import org.hibernate.annotations.NamedQuery;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.NamedQuery;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 /**
  * @author Muaz Cisse
@@ -152,11 +144,11 @@ public class Account implements UserDetails, Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "account_role",
+            name = "account_authority",
             joinColumns = {
                 @JoinColumn(name = "account_id")},
             inverseJoinColumns = {
-                @JoinColumn(name = "role_id")})
+                @JoinColumn(name = "authority_id")})
     public Set<Authority> getGandallAuthorities() {
         return gandallAuthorities;
     }

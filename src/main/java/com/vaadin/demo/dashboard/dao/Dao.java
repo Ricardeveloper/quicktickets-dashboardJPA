@@ -19,7 +19,7 @@ public interface Dao<T extends Object> {
      * <p>
      * If the passed object has a <code>setDateCreated(Date)</code> method then
      * we call it, passing in the current timestamp.
-     * </p>
+     * </p>+
      *     
 * @param t
      */

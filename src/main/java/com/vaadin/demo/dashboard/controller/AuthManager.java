@@ -1,11 +1,6 @@
 package com.vaadin.demo.dashboard.controller;
 
 import com.vaadin.demo.dashboard.event.LoginEvent;
-import java.io.Serializable;
-import java.util.Collection;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,21 +15,29 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.util.Collection;
+
+//import com.vaadin.demo.dashboard.service.AccountService;
+
 /**
  * @author muaz.cisse
  */
 @Controller
 public class AuthManager implements AuthenticationManager, Serializable {
 
-    @Autowired
-    private AccountService accountService;
+    //@Autowired
+    //private AccountService accountService;
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
 
         String username = (String) auth.getPrincipal();
         String password = (String) auth.getCredentials();
-        UserDetails user = accountService.loadUserByUsername(username);
+        //UserDetails user = accountService.getAccountByUsername(username);
+        UserDetails user = null;
 
         if (user != null && user.getPassword().equals(password)) {
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();

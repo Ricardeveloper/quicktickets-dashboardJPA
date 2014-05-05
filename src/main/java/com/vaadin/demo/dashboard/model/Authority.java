@@ -1,20 +1,11 @@
 package com.vaadin.demo.dashboard.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.springframework.security.core.GrantedAuthority;
 
 /**
  *
@@ -53,9 +44,9 @@ public class Authority implements GrantedAuthority, Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "role_permission",
+            name = "authority_permission",
             joinColumns = {
-                @JoinColumn(name = "role_id")},
+                @JoinColumn(name = "authority_id")},
             inverseJoinColumns = {
                 @JoinColumn(name = "permission_id")})
     public Set<Permission> getPermissions() {
@@ -89,7 +80,7 @@ public class Authority implements GrantedAuthority, Serializable {
 
     @Override
     public String toString() {
-        return "com.vaadin.demo.dashboard.model.Role[ id=" + id + " ]";
+        return "com.vaadin.demo.dashboard.model.Authority[ id=" + id + " ]";
     }
 
 }

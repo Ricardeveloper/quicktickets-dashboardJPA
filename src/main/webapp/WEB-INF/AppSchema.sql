@@ -1,78 +1,95 @@
-create table users (
-    username varchar(50) not null primary key,
-    password varchar(50) not null,
-    enabled boolean not null
-) engine = InnoDb;
+DROP DATABASE IF EXISTS geapp;
+CREATE DATABASE geapp;
+USE geapp;
 
-create table authorities (
-    username varchar(50) not null,
-    authority varchar(50) not null,
-    foreign key (username) references users (username),
-    unique index authorities_idx_1 (username, authority)
-) engine = InnoDb;
 
-create table groups (
-    id bigint unsigned not null auto_increment primary key,
-    group_name varchar(50) not null
-) engine = InnoDb;
+-- =====================================================================================================================
+-- Tables
+-- =====================================================================================================================
 
-create table group_authorities (
-    group_id bigint unsigned not null,
-    authority varchar(50) not null,
-    foreign key (group_id) references groups (id)
-) engine = InnoDb;
+CREATE TABLE account (
+  id         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  username   VARCHAR(50)  NOT NULL,
+  password   VARCHAR(50)  NOT NULL,
+  first_name VARCHAR(50)  NOT NULL,
+  last_name  VARCHAR(50)  NOT NULL,
+  email      VARCHAR(50)  NOT NULL,
+  enabled    BOOLEAN      NOT NULL,
+  UNIQUE INDEX `idx_account_username` (username)
+)
+  ENGINE = InnoDb;
 
-create table group_members (
-    id bigint unsigned not null auto_increment primary key,
-    username varchar(50) not null,
-    group_id bigint unsigned not null,
-    foreign key (group_id) references groups (id)
-) engine = InnoDb;
+CREATE TABLE authority (
+  id   SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50)       NOT NULL
+)
+  ENGINE = InnoDb;
 
-create table persistent_logins (
-    username varchar(64) not null,
-    series varchar(64) primary key,
-    token varchar(64) not null,
-    last_used timestamp not null
-) engine = InnoDb;
+CREATE TABLE permission (
+  id   SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50)       NOT NULL
+)
+  ENGINE = InnoDb;
 
-create table acl_sid (
-    id bigint unsigned not null auto_increment primary key,
-    principal tinyint(1) not null,
-    sid varchar(100) not null,
-    unique index acl_sid_idx_1 (sid, principal)
-) engine = InnoDb;
+CREATE TABLE account_authority (
+  id           INT UNSIGNED      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  account_id   INT UNSIGNED      NOT NULL,
+  authority_id SMALLINT UNSIGNED NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES account (id),
+  FOREIGN KEY (authority_id) REFERENCES authority (id),
+  UNIQUE INDEX idx_account_authority_id (account_id, authority_id)
+)
+  ENGINE = InnoDb;
 
-create table acl_class (
-    id bigint unsigned not null auto_increment primary key,
-    class varchar(100) unique not null
-) engine = InnoDb;
+CREATE TABLE authority_permission (
+  id            SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  authority_id  SMALLINT UNSIGNED NOT NULL,
+  permission_id SMALLINT UNSIGNED NOT NULL,
+  FOREIGN KEY (authority_id) REFERENCES authority (id),
+  FOREIGN KEY (permission_id) REFERENCES permission (id),
+  UNIQUE INDEX idx_authority_permission_id (authority_id, permission_id)
+)
+  ENGINE = InnoDb;
 
-create table acl_object_identity (
-    id bigint unsigned not null auto_increment primary key,
-    object_id_class bigint unsigned not null,
-    object_id_identity bigint unsigned not null,
-    parent_object bigint unsigned,
-    owner_sid bigint unsigned,
-    entries_inheriting tinyint(1) not null,
-    unique index acl_object_identity_idx_1
-        (object_id_class, object_id_identity),
-    foreign key (object_id_class) references acl_class (id),
-    foreign key (parent_object) references acl_object_identity (id),
-    foreign key (owner_sid) references acl_sid (id)
-) engine = InnoDb;
+-- =====================================================================================================================
+-- Procedures
+-- =====================================================================================================================
 
-create table acl_entry (
-    id bigint unsigned not null auto_increment primary key,
-    acl_object_identity bigint unsigned not null,
-    ace_order int unsigned not null,
-    sid bigint unsigned not null,
-    mask int not null,
-    granting tinyint(1) not null,
-    audit_success tinyint(1) not null,
-    audit_failure tinyint(1) not null,
-    unique index acl_entry_idx_1 (acl_object_identity, ace_order),
-    foreign key (acl_object_identity)
-        references acl_object_identity (id),
-    foreign key (sid) references acl_sid (id)
-) engine = InnoDb;
+DELIMITER //
+
+CREATE PROCEDURE createPermission($name VARCHAR(50))
+  BEGIN
+    INSERT INTO permission (name) VALUES ($name);
+  END //
+
+CREATE PROCEDURE createAuthority($name VARCHAR(50), OUT $id SMALLINT)
+  BEGIN
+    INSERT INTO `authority` (name) VALUES ($name);
+    SET $id := last_insert_id();
+  END //
+
+CREATE PROCEDURE `authorityHasPermission`($authority_id SMALLINT, $perm_name VARCHAR(50))
+  BEGIN
+    DECLARE _perm_id INT;
+    SELECT
+      id
+    FROM permission
+    WHERE name = $perm_name
+    INTO _perm_id;
+    INSERT INTO authority_permission (authority_id, permission_id) VALUES ($authority_id, _perm_id);
+  END //
+
+CREATE PROCEDURE createAccount($name VARCHAR(50), $first_name VARCHAR(50), $last_name VARCHAR(50), $email VARCHAR(50),
+  OUT                          $id   INT)
+  BEGIN
+    INSERT INTO account (username, password, first_name, last_name, email, enabled)
+    VALUES ($name, 'p@ssword', $first_name, $last_name, $email, 1);
+    SET $id := last_insert_id();
+  END //
+
+CREATE PROCEDURE accountHasAuthority($account_id INT, $authority_id SMALLINT)
+  BEGIN
+    INSERT INTO account_authority (account_id, authority_id) VALUES ($account_id, $authority_id);
+  END //
+
+DELIMITER ;
