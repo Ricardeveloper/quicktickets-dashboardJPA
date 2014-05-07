@@ -1,16 +1,16 @@
 package com.vaadin.demo.dashboard.dao.hibernate;
 
 import com.vaadin.demo.dashboard.dao.Dao;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.util.ReflectionUtils;
-
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
 import java.util.List;
+import javax.inject.Inject;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * @param <T>
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public abstract class AbstractDaoHibernate<T extends Object> implements Dao<T> {
 
-    //@Autowired
+    @Inject
     private SessionFactory sessionFactory;
     private Class<T> domainClass;
 

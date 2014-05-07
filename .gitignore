@@ -5,4 +5,4 @@ movies.txt
 .project
 gwt-unitCache/
 widgetsets/
-.idea/
+.idea/*

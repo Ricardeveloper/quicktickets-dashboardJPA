@@ -31,6 +31,12 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    
+    <listener>
+        <listener-class>
+            org.springframework.security.web.session.HttpSessionEventPublisher
+        </listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>QuickTicketsDashboard</servlet-name>
@@ -65,11 +71,11 @@
     </servlet-mapping>
 
     <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-name>specialFilterChainProxy</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-name>specialFilterChainProxy</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>

@@ -25,7 +25,6 @@ call createAccount('paula', 'Paula', 'Cazares', 'paula@example.com', @paula);
 call accountHasAuthority(@paula, @authority_user);
 
 call createAccount('daniel', 'Daniel', 'Cazares', 'daniel@example.com', @daniel);
-call accountHasAuthority(@daniel, @authority_user);
 call accountHasAuthority(@daniel, @authority_guest);
 
 call createAccount('julia', 'Julia', 'Cazares', 'julia@example.com', @julia);

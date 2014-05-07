@@ -2,6 +2,7 @@
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns="http://www.springframework.org/schema/security"
+             xmlns:p="http://www.springframework.org/schema/p"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
                 http://www.springframework.org/schema/security
@@ -10,11 +11,29 @@
     <!-- <global-method-security pre-post-annotations="enabled"/> -->
 
     <authentication-manager alias="authenticationManager">
-       <!-- <authentication-provider user-service-ref="accountDao"/> -->
+        <authentication-provider user-service-ref="accountDao"/>
     </authentication-manager>
 
     <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
         <beans:property name="invalidateHttpSession" value="false"/>
     </beans:bean>
+    
+    <!-- Allows us to show the username in the page template. -->
+    <!-- The proxy in web.xml finds this using the proxy's filter name. -->
+    <beans:bean id="specialFilterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+        <filter-chain-map path-type="ant">
+            <filter-chain pattern="/**" filters="specialPersistenceFilter,specialAuthFilter" />
+        </filter-chain-map>
+    </beans:bean>
+    
+    <!-- Allows us to show the username in the page template. -->
+    <beans:bean id="specialPersistenceFilter"
+                class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
+
+    <!-- Allows us to show the username in the page template. -->
+    <beans:bean id="specialAuthFilter"
+                class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter"
+                p:authenticationManager-ref="authenticationManager"
+                p:ignoreFailure="true" />
 
 </beans:beans>
