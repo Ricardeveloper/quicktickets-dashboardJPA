@@ -1,35 +1,62 @@
 package com.vaadin.demo.dashboard.model;
 
-import org.hibernate.annotations.NamedQuery;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author Muaz Cisse
  */
 @Entity
 @Table(name = "account")
-@NamedQuery(
-        name = "account.byUsername",
-        query = "from Account a where a.username = :username")
-public class Account implements UserDetails, Serializable {
+@NamedQueries(
+        {
+            @NamedQuery(
+                    name = "account.byUsername",
+                    query = "from Account a where a.username = :username"),
+            @NamedQuery(
+                    name = "account.byUsernameAndPassword",
+                    query = "from Account a where a.username = :username and a.password = :password")
+        }
+)
+public class Account implements UserDetails, Serializable, Comparable<Account> {
 
     private static final long serialVersionUID = 1L;
 
-    public static final Account ACCOUNT = new Account("anonymous");
-
     private Long id;
+
+    @NotEmpty
     private String username;
+
+    @NotEmpty
     private String firstName;
+
+    @NotEmpty
     private String lastName;
+
+    @NotEmpty
+    @Email
     private String email;
+
     private String password;
     private boolean enabled;
     private Set<Authority> gandallAuthorities = new HashSet<>();
@@ -188,6 +215,11 @@ public class Account implements UserDetails, Serializable {
     @Override
     public String toString() {
         return username;
+    }
+
+    @Override
+    public int compareTo(Account account) {
+        return reflectionCompare(this, account);
     }
 
 }

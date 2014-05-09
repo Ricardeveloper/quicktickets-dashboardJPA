@@ -6,7 +6,10 @@
 package com.vaadin.demo.dashboard.dao;
 
 import com.vaadin.demo.dashboard.model.Account;
+import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  *
@@ -14,5 +17,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public interface AccountDao extends Dao<Account>, UserDetailsService {
 
-    Account getByUsername(String username);
+    UserDetails loadUserByUsernameAndPassword(String username, String password) throws UsernameNotFoundException, DataAccessException;
 }

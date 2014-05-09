@@ -144,3 +144,49 @@ return user;
 return null;
 }
 }
+
+
+
+
+Offending resource: ServletContext resource [/WEB-INF/applicationContext.xml]; nested exception is org.springframework.beans.factory.xml.XmlBeanDefinitionStoreException: Line 15 in XML document from ServletContext resource [/WEB-INF/security-config.xml] is invalid; nested exception is org.xml.sax.SAXParseException; lineNumber: 15; columnNumber: 54; cvc-complex-type.2.4.a: Invalid content was found starting with element 'http'. One of '{"http://www.springframework.org/schema/security":intercept-url, "http://www.springframework.org/schema/security":access-denied-handler, "http://www.springframework.org/schema/security":form-login, "http://www.springframework.org/schema/security":openid-login, "http://www.springframework.org/schema/security":x509, "http://www.springframework.org/schema/security":jee, "http://www.springframework.org/schema/security":http-basic, "http://www.springframework.org/schema/security":logout, "http://www.springframework.org/schema/security":session-management, "http://www.springframework.org/schema/security":remember-me, "http://www.springframework.org/schema/security":anonymous, "http://www.springframework.org/schema/security":port-mappings, "http://www.springframework.org/schema/security":custom-filter, "http://www.springframework.org/schema/security":request-cache, "http://www.springframework.org/schema/security":expression-handler, "http://www.springframework.org/schema/security":headers, "http://www.springframework.org/schema/security":csrf}' is expected.
+
+
+   <http security="none" pattern="/login" />
+    
+    <!-- 
+    <http security="none" pattern="/login" />
+    <http security="none" pattern="/resources/**" />
+    <http security="none" pattern="/favicon.ico" />
+
+    <http auto-config="false"  use-expressions="true">
+        <intercept-url pattern="/UIDL/**" access="isAuthenticated()" />
+        <intercept-url pattern="/VAADIN/**" access="permitAll" />
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/logout" access="permitAll" />
+        <intercept-url pattern="/accessdenied" access="permitAll" />
+        <intercept-url pattern="/**" access="hasRole('AUTHORITY_USER')" />
+        <form-login login-page="/login" authentication-failure-url="/accessdenied" />
+        <logout logout-success-url="/logout" />
+    </http>
+     -->
+
+
+    
+    <!--
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+        <beans:constructor-arg value="512" />
+        <beans:property name="iterations" value="987" />
+    </beans:bean>
+    
+    <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+        <beans:property name="userPropertyToUse" value="username" />
+    </beans:bean>
+    -->
+
+
+
+        <!-- <authentication-provider>
+            <user-service>
+                <user name="TEST" password="1234" authorities="AUTHORITY_USER" />
+            </user-service>
+        </authentication-provider>  -->

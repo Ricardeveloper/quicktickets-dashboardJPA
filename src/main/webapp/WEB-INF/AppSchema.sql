@@ -10,7 +10,7 @@ USE geapp;
 CREATE TABLE account (
   id         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username   VARCHAR(50)  NOT NULL,
-  password   VARCHAR(50)  NOT NULL,
+  password   VARCHAR(100)  NOT NULL,
   first_name VARCHAR(50)  NOT NULL,
   last_name  VARCHAR(50)  NOT NULL,
   email      VARCHAR(50)  NOT NULL,
@@ -79,11 +79,11 @@ CREATE PROCEDURE `authorityHasPermission`($authority_id SMALLINT, $perm_name VAR
     INSERT INTO authority_permission (authority_id, permission_id) VALUES ($authority_id, _perm_id);
   END //
 
-CREATE PROCEDURE createAccount($name VARCHAR(50), $first_name VARCHAR(50), $last_name VARCHAR(50), $email VARCHAR(50),
+CREATE PROCEDURE createAccount($name VARCHAR(50), $password VARCHAR(100), $first_name VARCHAR(50), $last_name VARCHAR(50), $email VARCHAR(50),
   OUT                          $id   INT)
   BEGIN
     INSERT INTO account (username, password, first_name, last_name, email, enabled)
-    VALUES ($name, 'p@ssword', $first_name, $last_name, $email, 1);
+    VALUES ($name, $password, $first_name, $last_name, $email, 1);
     SET $id := last_insert_id();
   END //
 

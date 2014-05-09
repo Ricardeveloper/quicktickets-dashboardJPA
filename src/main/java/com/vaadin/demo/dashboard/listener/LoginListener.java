@@ -2,9 +2,10 @@ package com.vaadin.demo.dashboard.listener;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.controller.AuthManager;
 import com.vaadin.demo.dashboard.controller.RequestHolder;
 import com.vaadin.demo.dashboard.event.LoginEvent;
+import com.vaadin.demo.dashboard.service.AuthenticationService;
+import com.vaadin.demo.dashboard.service.impl.AuthenticationServiceImpl;
 import com.vaadin.demo.dashboard.util.ControlHelper;
 import com.vaadin.demo.dashboard.view.DashboardView;
 import com.vaadin.navigator.Navigator;
@@ -19,13 +20,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 
 /**
- * @author muaz.cisse
+ * @author Muaz Cisse
  */
 @Controller
 public class LoginListener extends GandallListener {
 
     @Autowired
-    private final AuthManager authManager = new AuthManager();
+    private final AuthenticationService authManager = new AuthenticationServiceImpl();
 
     @Subscribe
     @Override

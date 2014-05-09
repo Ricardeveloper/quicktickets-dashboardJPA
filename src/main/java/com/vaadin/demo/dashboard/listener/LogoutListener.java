@@ -2,7 +2,7 @@ package com.vaadin.demo.dashboard.listener;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.controller.AuthManager;
+import com.vaadin.demo.dashboard.service.impl.AuthenticationServiceImpl;
 import com.vaadin.demo.dashboard.controller.RequestHolder;
 import com.vaadin.demo.dashboard.event.LogoutEvent;
 import com.vaadin.demo.dashboard.view.LoginView;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 public class LogoutListener extends GandallListener {
 
     @Autowired
-    private final AuthManager authManager = new AuthManager();
+    private final AuthenticationServiceImpl authManager = new AuthenticationServiceImpl();
 
     @Subscribe
     @Override

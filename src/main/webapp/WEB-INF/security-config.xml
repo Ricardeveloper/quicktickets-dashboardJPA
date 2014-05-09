@@ -4,18 +4,25 @@
              xmlns="http://www.springframework.org/schema/security"
              xmlns:p="http://www.springframework.org/schema/p"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
-                http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-                http://www.springframework.org/schema/security
-                http://www.springframework.org/schema/security/spring-security-3.2.xsd">
-
-    <!-- <global-method-security pre-post-annotations="enabled"/> -->
-
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+ 
+    <!-- enable the @PreAuthorize and @PostAuthorize annotations -->
+    <global-method-security pre-post-annotations="enabled" proxy-target-class="true" />
+    
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <beans:constructor-arg value="12" />
+    </beans:bean>
+    
     <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="accountDao"/>
+        <authentication-provider user-service-ref="accountDao">
+            <password-encoder ref="passwordEncoder" />
+        </authentication-provider>
     </authentication-manager>
 
     <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
-        <beans:property name="invalidateHttpSession" value="false"/>
+        <beans:property name="invalidateHttpSession" value="false" />
     </beans:bean>
     
     <!-- Allows us to show the username in the page template. -->

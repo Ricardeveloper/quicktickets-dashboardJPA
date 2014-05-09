@@ -1,14 +1,13 @@
-package com.vaadin.demo.dashboard.controller;
+package com.vaadin.demo.dashboard.service.impl;
 
+import com.vaadin.demo.dashboard.controller.AccountStatusChecker;
 import com.vaadin.demo.dashboard.event.LoginEvent;
 import com.vaadin.demo.dashboard.service.AccountService;
-import java.io.Serializable;
+import com.vaadin.demo.dashboard.service.AuthenticationService;
 import java.util.Collection;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,28 +21,32 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * @author muaz.cisse
+ * @author Muaz Cisse
  */
 @Controller
-public class AuthManager implements AuthenticationManager, Serializable {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private AccountStatusChecker accountStatusChecker;
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
 
         String username = (String) auth.getPrincipal();
         String password = (String) auth.getCredentials();
-        UserDetails user = accountService.getAccountByUsername(username);
+        UserDetails user = accountService.getAccountByUsernameAndPassword(username, password);
 
-        if (user != null && user.getPassword().equals(password)) {
-            Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-            return new UsernamePasswordAuthenticationToken(username, password, authorities);
-        }
-        throw new BadCredentialsException("Bad Credentials");
+        accountStatusChecker.check(user);
+
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+        return new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), authorities);
+
     }
 
+    @Override
     public void handleAuthentication(LoginEvent loginEvent, HttpServletRequest httpRequest) {
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginEvent.getLogin(), loginEvent.getPassword());
@@ -56,6 +59,7 @@ public class AuthManager implements AuthenticationManager, Serializable {
 
     }
 
+    @Override
     public void handleLogout(HttpServletRequest httpRequest) {
 
         ServletContext servletContext = httpRequest.getSession().getServletContext();
@@ -68,5 +72,20 @@ public class AuthManager implements AuthenticationManager, Serializable {
 
         // Response should not be used?
         logoutHandler.logout(httpRequest, null, authentication);
+    }
+
+    @Override
+    public boolean hasAnyRole(String... roles) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) authentication.getAuthorities();
+        for (GrantedAuthority authority : authorities) {
+            for (String role : roles) {
+                if (role.equals(authority.getAuthority())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
