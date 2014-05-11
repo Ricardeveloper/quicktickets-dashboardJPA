@@ -8,13 +8,16 @@ USE geapp;
 -- =====================================================================================================================
 
 CREATE TABLE account (
-  id         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  username   VARCHAR(50)  NOT NULL,
-  password   VARCHAR(100)  NOT NULL,
-  first_name VARCHAR(50)  NOT NULL,
-  last_name  VARCHAR(50)  NOT NULL,
-  email      VARCHAR(50)  NOT NULL,
-  enabled    BOOLEAN      NOT NULL,
+  id                     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  username               VARCHAR(50)  NOT NULL,
+  password               VARCHAR(100) NOT NULL,
+  first_name             VARCHAR(50)  NOT NULL,
+  last_name              VARCHAR(50)  NOT NULL,
+  email                  VARCHAR(50)  NOT NULL,
+  expiration_date        DATETIME     NOT NULL,
+  credential_non_expired BOOLEAN      NOT NULL,
+  account_non_locked     BOOLEAN      NOT NULL,
+  enabled                BOOLEAN      NOT NULL,
   UNIQUE INDEX `idx_account_username` (username)
 )
   ENGINE = InnoDb;
@@ -79,11 +82,12 @@ CREATE PROCEDURE `authorityHasPermission`($authority_id SMALLINT, $perm_name VAR
     INSERT INTO authority_permission (authority_id, permission_id) VALUES ($authority_id, _perm_id);
   END //
 
-CREATE PROCEDURE createAccount($name VARCHAR(50), $password VARCHAR(100), $first_name VARCHAR(50), $last_name VARCHAR(50), $email VARCHAR(50),
-  OUT                          $id   INT)
+CREATE PROCEDURE createAccount($name      VARCHAR(50), $password VARCHAR(100), $first_name VARCHAR(50),
+                               $last_name VARCHAR(50), $email VARCHAR(50), $expiration_date DATE,
+  OUT                          $id        INT)
   BEGIN
-    INSERT INTO account (username, password, first_name, last_name, email, enabled)
-    VALUES ($name, $password, $first_name, $last_name, $email, 1);
+    INSERT INTO account (username, password, first_name, last_name, email, expiration_date, credential_non_expired, account_non_locked, enabled)
+    VALUES ($name, $password, $first_name, $last_name, $email, $expiration_date, 1, 1, 1);
     SET $id := last_insert_id();
   END //
 

@@ -7,9 +7,8 @@
 package com.vaadin.demo.dashboard.view;
 
 /**
- *
  * @author Muaz Cisse
  */
 public class AccessDeniedView {
-    
+
 }

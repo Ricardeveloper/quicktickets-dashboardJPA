@@ -1,27 +1,17 @@
 package com.vaadin.demo.dashboard.model;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.*;
+
+import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 
 /**
  * @author Muaz Cisse
@@ -30,12 +20,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "account")
 @NamedQueries(
         {
-            @NamedQuery(
-                    name = "account.byUsername",
-                    query = "from Account a where a.username = :username"),
-            @NamedQuery(
-                    name = "account.byUsernameAndPassword",
-                    query = "from Account a where a.username = :username and a.password = :password")
+                @NamedQuery(
+                        name = "account.byUsername",
+                        query = "from Account a where a.username = :username"),
+                @NamedQuery(
+                        name = "account.byUsernameAndPassword",
+                        query = "from Account a where a.username = :username and a.password = :password")
         }
 )
 public class Account implements UserDetails, Serializable, Comparable<Account> {
@@ -57,8 +47,21 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     @Email
     private String email;
 
+    @NotEmpty
     private String password;
+
+    @NotEmpty
+    private Date expirationDate;
+
+    @NotEmpty
     private boolean enabled;
+
+    @NotEmpty
+    private boolean accountNonLocked;
+
+    @NotEmpty
+    private boolean credentialsNonExpired;
+
     private Set<Authority> gandallAuthorities = new HashSet<>();
 
     public Account() {
@@ -132,28 +135,49 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
         this.password = password;
     }
 
+    @Column(name = "expiration_date")
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
     @Transient
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        // subtract one day to the current date
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+
+        return expirationDate.after(cal.getTime());
     }
 
     /* (non-Javadoc)
      * @see org.springframework.security.core.userdetails.UserDetails#isAccountNonLocked()
      */
-    @Transient
+    @Column(name = "account_non_locked")
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     /* (non-Javadoc)
      * @see org.springframework.security.core.userdetails.UserDetails#isCredentialsNonExpired()
      */
-    @Transient
+    @Column(name = "credential_non_expired")
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
     }
 
     /* (non-Javadoc)
@@ -173,9 +197,9 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     @JoinTable(
             name = "account_authority",
             joinColumns = {
-                @JoinColumn(name = "account_id")},
+                    @JoinColumn(name = "account_id")},
             inverseJoinColumns = {
-                @JoinColumn(name = "authority_id")})
+                    @JoinColumn(name = "authority_id")})
     public Set<Authority> getGandallAuthorities() {
         return gandallAuthorities;
     }

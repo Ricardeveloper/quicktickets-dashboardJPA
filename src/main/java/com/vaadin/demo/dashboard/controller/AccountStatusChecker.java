@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author Muaz Cisse
  */
 @Component
@@ -16,6 +15,8 @@ public class AccountStatusChecker implements UserDetailsChecker {
 
     @Override
     public void check(UserDetails user) {
+
+
         if (!user.isAccountNonExpired()) {
             throw new AccountExpiredException("User account has expired");
         }
@@ -28,8 +29,8 @@ public class AccountStatusChecker implements UserDetailsChecker {
             throw new DisabledException("User is disabled");
         }
 
-        if (!user.isAccountNonExpired()) {
-            throw new AccountExpiredException("User account has expired");
+        if (!user.isCredentialsNonExpired()) {
+            throw new AccountExpiredException("User account password has expired");
         }
     }
 }

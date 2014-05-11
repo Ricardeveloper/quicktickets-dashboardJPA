@@ -2,11 +2,9 @@ package com.vaadin.demo.dashboard.service.impl;
 
 import com.vaadin.demo.dashboard.controller.AccountStatusChecker;
 import com.vaadin.demo.dashboard.event.LoginEvent;
+import com.vaadin.demo.dashboard.listener.EventDispatcher;
 import com.vaadin.demo.dashboard.service.AccountService;
 import com.vaadin.demo.dashboard.service.AuthenticationService;
-import java.util.Collection;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+
 /**
  * @author Muaz Cisse
  */
@@ -30,14 +32,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private AccountService accountService;
 
     @Autowired
+    private EventDispatcher authenticationListener;
+
+    @Autowired
     private AccountStatusChecker accountStatusChecker;
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
 
+        //EventBus eventBus = new EventBus();
+
         String username = (String) auth.getPrincipal();
         String password = (String) auth.getCredentials();
         UserDetails user = accountService.getAccountByUsernameAndPassword(username, password);
+
+        //eventBus.register(authenticationListener);
+        //eventBus.post(this);
 
         accountStatusChecker.check(user);
 

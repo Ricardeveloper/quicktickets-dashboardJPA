@@ -10,15 +10,16 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.event.LoginEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
-import java.io.Serializable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+
+import java.io.Serializable;
 
 /**
  * @author Muaz Cisse
  */
 @Controller
-public class GandallListener implements Button.ClickListener, Serializable {
+public abstract class GandallListener implements Button.ClickListener, Serializable {
 
     private EventBus eventBus;
 
