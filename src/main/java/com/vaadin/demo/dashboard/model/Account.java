@@ -1,17 +1,30 @@
 package com.vaadin.demo.dashboard.model;
 
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.Transient;
+import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
-
-import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 
 /**
  * @author Muaz Cisse
@@ -136,6 +149,7 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     }
 
     @Column(name = "expiration_date")
+    @Temporal(javax.persistence.TemporalType.DATE)
     public Date getExpirationDate() {
         return expirationDate;
     }

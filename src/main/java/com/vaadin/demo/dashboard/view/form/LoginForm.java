@@ -5,7 +5,15 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.listener.LoginListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -74,11 +82,11 @@ public class LoginForm extends HorizontalLayout {
 
         final ShortcutListener enter = new ShortcutListener("Sign In",
                 ShortcutAction.KeyCode.ENTER, null) {
-            @Override
-            public void handleAction(Object sender, Object target) {
-                signin.click();
-            }
-        };
+                    @Override
+                    public void handleAction(Object sender, Object target) {
+                        //signin.click();
+                    }
+                };
 
         LoginListener loginListener = getLoginListener();
         loginListener.setEventBus(eventBus);

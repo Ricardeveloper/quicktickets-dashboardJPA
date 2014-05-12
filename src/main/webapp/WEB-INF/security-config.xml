@@ -9,9 +9,14 @@
            http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
     <!-- enable the @PreAuthorize and @PostAuthorize annotations -->
-    <global-method-security pre-post-annotations="enabled" proxy-target-class="true"/>
+    <beans:bean id="securityExpressionHandler"
+          class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler" />
+    
+    <global-method-security authentication-manager-ref="authenticationManager" pre-post-annotations="enabled" proxy-target-class="true">
+        <expression-handler ref="securityExpressionHandler" />
+    </global-method-security>
 
-    <http security="none" pattern="/login"/>
+    <http security="none" pattern="/login"/> 
 
     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
         <beans:constructor-arg value="12"/>
