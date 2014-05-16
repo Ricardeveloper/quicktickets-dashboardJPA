@@ -1,18 +1,13 @@
 package com.vaadin.demo.dashboard.model;
 
-import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 
 /**
  *

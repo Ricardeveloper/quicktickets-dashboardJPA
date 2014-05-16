@@ -1,27 +1,5 @@
 package com.vaadin.demo.dashboard.model;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NamedQueries;
@@ -29,6 +7,13 @@ import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.*;
+
+import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 
 /**
  * @author Muaz Cisse
@@ -39,10 +24,10 @@ import org.springframework.security.core.userdetails.UserDetails;
         {
             @NamedQuery(
                     name = "account.byUsername",
-                    query = "from Account a where a.username = :username where accountNonDeleted = 1"),
+                    query = "from Account a where a.username = :username"),
             @NamedQuery(
                     name = "account.byUsernameAndPassword",
-                    query = "from Account a where a.username = :username and a.password = :password where accountNonDeleted = 1")
+                    query = "from Account a where a.username = :username and a.password = :password")
         }
 )
 public class Account implements UserDetails, Serializable, Comparable<Account> {

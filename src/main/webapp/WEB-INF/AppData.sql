@@ -20,20 +20,20 @@ CALL createAuthority('AUTHORITY_GUEST', @authority_guest);
 
 -- Create accounts
 
-CALL createAccount('paula', '$2a$12$hpLb3X.eR0S3uznzQb1uWetDql.k4RjOqH/XLPAEhIx/DHNWae.1q', 'Paula', 'Cazares',
+CALL createAccount('paula', '2015-06-18 10:34:09', '2015-06-18 10:34:09', '$2a$12$hpLb3X.eR0S3uznzQb1uWetDql.k4RjOqH/XLPAEhIx/DHNWae.1q', 'Paula', 'Cazares',
                    'paula@example.com', '2015-06-18 10:34:09', @paula);
 CALL accountHasAuthority(@paula, @authority_user);
 
-CALL createAccount('daniel', '$2a$12$i/V9YY9vik3TdJuEn3q0r.nOLvmA1I8CDZkColtzH.hu.Ws1CpMjC', 'Daniel', 'Cazares',
+CALL createAccount('daniel', '2015-06-18 10:34:09', '2015-06-18 10:34:09', '$2a$12$i/V9YY9vik3TdJuEn3q0r.nOLvmA1I8CDZkColtzH.hu.Ws1CpMjC', 'Daniel', 'Cazares',
                    'daniel@example.com', '2015-06-18 10:34:09', @daniel);
 CALL accountHasAuthority(@daniel, @authority_guest);
 
-CALL createAccount('julia', '$2a$12$azNYZq3pRh52G2BNEroKiefqi8msJcgHOE5vbeo7pUVY93ZtJUV2m', 'Julia', 'Cazares',
+CALL createAccount('julia', '2015-06-18 10:34:09', '2015-06-18 10:34:09', '$2a$12$azNYZq3pRh52G2BNEroKiefqi8msJcgHOE5vbeo7pUVY93ZtJUV2m', 'Julia', 'Cazares',
                    'julia@example.com', '2015-06-18 10:34:09', @julia);
 CALL accountHasAuthority(@julia, @authority_user);
 CALL accountHasAuthority(@julia, @authority_guest);
 
-CALL createAccount('juan', '$2a$12$1geczus0gx0vdNIA5N98kuHsVVC6lH1ppGYZAVCEOn.r1MzbkcXre', 'Juan', 'Cazares',
+CALL createAccount('juan', '2015-06-18 10:34:09', '2015-06-18 10:34:09', '$2a$12$1geczus0gx0vdNIA5N98kuHsVVC6lH1ppGYZAVCEOn.r1MzbkcXre', 'Juan', 'Cazares',
                    'juan@example.com', '2015-06-18 10:34:09', @juan);
 CALL accountHasAuthority(@juan, @authority_user);
 CALL accountHasAuthority(@juan, @authority_admin);
