@@ -14,4 +14,14 @@ public interface AccountService {
 
     public void createAccount(Account account);
 
+    public void updateAccount(Account account);
+
+    public void deleteAccount(Account account);
+    
+    public void unblockAccount(Account account);
+
+    public void changeAccountPassword(Account account);
+
+    public void disableAccount(Account account);
+
 }

@@ -110,4 +110,22 @@ public class AccountDaoHibernate extends AbstractDaoHibernate<Account> implement
         getSession().getTransaction().commit();
     }
 
+    @Override
+    public void unblockAccount(Account account) {
+        getSession().beginTransaction();
+        getSession().getTransaction().commit();
+    }
+
+    @Override
+    public void changeAccountPassword(Account account) {
+        getSession().beginTransaction();
+        getSession().getTransaction().commit();
+    }
+
+    @Override
+    public void disableAccount(Account account) {
+        getSession().beginTransaction();
+        getSession().getTransaction().commit();
+    }
+
 }

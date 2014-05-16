@@ -19,8 +19,15 @@ public interface AccountDao extends Dao<Account>, UserDetailsService {
     Account loadAccountByUsernameAndPassword(String username, String password) throws UsernameNotFoundException, DataAccessException;
 
     Account loadAccountByUsername(String username) throws UsernameNotFoundException, DataAccessException;
-    
+
     public void updateFailAttempts(Account account);
 
     public void resetFailAttempts(Account account);
+
+    public void unblockAccount(Account account);
+
+    public void changeAccountPassword(Account account);
+
+    public void disableAccount(Account account);
+
 }

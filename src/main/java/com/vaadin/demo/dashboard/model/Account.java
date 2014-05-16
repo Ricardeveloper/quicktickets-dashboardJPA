@@ -39,10 +39,10 @@ import org.springframework.security.core.userdetails.UserDetails;
         {
             @NamedQuery(
                     name = "account.byUsername",
-                    query = "from Account a where a.username = :username"),
+                    query = "from Account a where a.username = :username where accountNonDeleted = 1"),
             @NamedQuery(
                     name = "account.byUsernameAndPassword",
-                    query = "from Account a where a.username = :username and a.password = :password")
+                    query = "from Account a where a.username = :username and a.password = :password where accountNonDeleted = 1")
         }
 )
 public class Account implements UserDetails, Serializable, Comparable<Account> {
@@ -50,6 +50,12 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+
+    @NotNull
+    private Date dateCreated;
+
+    @NotNull
+    private Date dateModified;
 
     @NotNull
     private String username;
@@ -79,6 +85,9 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     @NotNull
     private boolean credentialsNonExpired;
 
+    @NotNull
+    private boolean accountNonDeleted;
+
     private Set<Authority> gandallAuthorities = new HashSet<>();
 
     private AccountLoginAttempts accountLoginAttemps;
@@ -88,6 +97,38 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
 
     public Account(String username) {
         this.username = username;
+    }
+
+    /**
+     * @return the dateCreated
+     */
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "date_created")
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    /**
+     * @param dateCreated the dateCreated to set
+     */
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    /**
+     * @return the dateModified
+     */
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "date_modified")
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    /**
+     * @param dateModified the dateModified to set
+     */
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
     }
 
     @Id
@@ -219,6 +260,21 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * @return the accountNonDeleted
+     */
+    @Column(name = "account_non_deleted")
+    public boolean isAccountNonDeleted() {
+        return accountNonDeleted;
+    }
+
+    /**
+     * @param accountNonDeleted the accountNonDeleted to set
+     */
+    public void setAccountNonDeleted(boolean accountNonDeleted) {
+        this.accountNonDeleted = accountNonDeleted;
     }
 
     /**

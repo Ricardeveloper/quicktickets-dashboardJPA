@@ -3,9 +3,6 @@ package com.vaadin.demo.dashboard.service.impl;
 import com.vaadin.demo.dashboard.dao.AccountDao;
 import com.vaadin.demo.dashboard.model.Account;
 import com.vaadin.demo.dashboard.service.AccountService;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Muaz Cisse
  */
 @Service
-//@Transactional
+@Transactional
 //@PreAuthorize("denyAll")
 public class AccountServiceImpl implements AccountService {
 
@@ -28,16 +25,12 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    Calendar cal = GregorianCalendar.getInstance();
-    Timestamp timestamp = new Timestamp(cal.getTimeInMillis());
-
     /**
      *
      * @param username
      * @param password
      * @return
      */
-    @Transactional
     @Override
     public UserDetails getAccountByUsernameAndPassword(String username, String password) {
 
@@ -71,13 +64,47 @@ public class AccountServiceImpl implements AccountService {
      * @param account
      */
     @PreAuthorize("hasRole('AUTHORITY_ADMIN')")
-    @Transactional(readOnly = false)
     @Override
     public void createAccount(Account account) {
         String password = account.getPassword();
         String encryptedPassword = passwordEncoder.encode(password);
         account.setPassword(encryptedPassword);
         accountDao.create(account);
+    }
+
+    /**
+     *
+     * @param account
+     */
+    @PreAuthorize("hasRole('AUTHORITY_ADMIN')")
+    @Override
+    public void updateAccount(Account account) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     *
+     * @param account
+     */
+    @PreAuthorize("hasRole('AUTHORITY_ADMIN')")
+    @Override
+    public void deleteAccount(Account account) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void unblockAccount(Account account) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void changeAccountPassword(Account account) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void disableAccount(Account account) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
