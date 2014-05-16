@@ -7,6 +7,7 @@ import com.vaadin.demo.dashboard.event.LoginEvent;
 import com.vaadin.demo.dashboard.service.AuthenticationService;
 import com.vaadin.demo.dashboard.service.impl.AuthenticationServiceImpl;
 import com.vaadin.demo.dashboard.util.ControlHelper;
+import com.vaadin.demo.dashboard.view.DashboardView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -48,7 +49,7 @@ public class LoginListener extends GandallListener implements Serializable {
 
             DashboardUI current = (DashboardUI) UI.getCurrent();
             Navigator navigator = current.getNavigator();
-            //navigator.navigateTo(DashboardView.getViewName());
+            navigator.navigateTo(DashboardView.getViewName());
 
         } catch (AuthenticationException e) {
             Notification.show("Authentication failed: "

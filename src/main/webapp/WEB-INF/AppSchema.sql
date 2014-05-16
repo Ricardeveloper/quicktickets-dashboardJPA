@@ -54,6 +54,13 @@ CREATE TABLE authority_permission (
 )
   ENGINE = InnoDb;
 
+CREATE TABLE account_attempts (
+  account_id   INT UNSIGNED NOT NULL PRIMARY KEY,
+  attempts INT UNSIGNED NOT NULL,
+  lastModified datetime NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES account (id)
+) ENGINE = InnoDb;
+
 -- =====================================================================================================================
 -- Procedures
 -- =====================================================================================================================

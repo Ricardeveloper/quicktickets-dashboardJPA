@@ -19,36 +19,22 @@
     <util:properties id="hibernateProperties">
         <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
         <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.use_sql_comments">true</prop>
+        <prop key="hibernate.order_updates">true</prop>
+        <prop key="hibernate.transaction.flush_before_completion">true</prop>
+        <prop key="hibernate.hbm2ddl.auto">update</prop>
+        <prop key="hibernate.current_session_context_class">thread</prop>
     </util:properties>
 
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
           p:dataSource-ref="dataSource"
-          p:packagesToScan="com.vaadin.demo.dashboard"
-          p:hibernateProperties-ref="hibernateProperties"/>
-    
-    <!-- 
-            <property name="eventListeners">
-            <map>
-                <entry key="post-insert" value-ref="envers" />
-                <entry key="post-update" value-ref="envers" />
-                <entry key="post-delete" value-ref="envers" />
-                <entry key="pre-collection-update" value-ref="envers" />
-                <entry key="pre-collection-remove" value-ref="envers" />
-                <entry key="post-collection-recreate" value-ref="envers" />
-            </map>
-        </property>
-        
-         <bean id="envers" class="org.hibernate.envers.event.AuditEventListener" />
-          -->
-
-    <!-- DAOs and service beans
-    <context:component-scan base-package="com.vaadin.demo.dashboard.dao.hibernate"/>
-    <context:component-scan base-package="com.vaadin.demo.dashboard.service"/>
-    -->
+          p:packagesToScan="com.vaadin.demo.dashboard.*"
+          p:hibernateProperties-ref="hibernateProperties" />
 
     <!-- Transactions -->
-    <tx:annotation-driven/>
+    <tx:annotation-driven />
 
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate4.HibernateTransactionManager"

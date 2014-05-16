@@ -84,7 +84,7 @@ public class LoginForm extends HorizontalLayout {
                 ShortcutAction.KeyCode.ENTER, null) {
                     @Override
                     public void handleAction(Object sender, Object target) {
-                        //signin.click();
+                        signin.click();
                     }
                 };
 

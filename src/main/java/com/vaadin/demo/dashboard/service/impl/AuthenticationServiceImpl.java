@@ -29,22 +29,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private AccountService accountService;
 
-    //@Autowired
-    //private EventDispatcher authenticationListener;
-
     @Autowired
     private AccountStatusChecker accountStatusChecker;
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
 
-        //EventBus eventBus = new EventBus();
         String username = (String) auth.getPrincipal();
         String password = (String) auth.getCredentials();
         UserDetails user = accountService.getAccountByUsernameAndPassword(username, password);
 
-        //eventBus.register(authenticationListener);
-        //eventBus.post(this);
         accountStatusChecker.check(user);
 
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();

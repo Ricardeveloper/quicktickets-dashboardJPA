@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vaadin.demo.dashboard.listener;
 
 import com.google.common.eventbus.EventBus;
@@ -10,10 +5,9 @@ import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.event.LoginEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
+import java.io.Serializable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-
-import java.io.Serializable;
 
 /**
  * @author Muaz Cisse

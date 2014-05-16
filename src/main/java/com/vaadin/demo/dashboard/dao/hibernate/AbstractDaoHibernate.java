@@ -7,9 +7,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
 import java.util.List;
-import javax.inject.Inject;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -18,8 +18,9 @@ import org.springframework.util.ReflectionUtils;
  */
 public abstract class AbstractDaoHibernate<T extends Object> implements Dao<T> {
 
-    @Inject
+    @Autowired
     private SessionFactory sessionFactory;
+
     private Class<T> domainClass;
 
     protected Session getSession() {

@@ -190,3 +190,27 @@ Offending resource: ServletContext resource [/WEB-INF/applicationContext.xml]; n
                 <user name="TEST" password="1234" authorities="AUTHORITY_USER" />
             </user-service>
         </authentication-provider>  -->
+
+
+
+
+    
+    <!-- 
+            <property name="eventListeners">
+            <map>
+                <entry key="post-insert" value-ref="envers" />
+                <entry key="post-update" value-ref="envers" />
+                <entry key="post-delete" value-ref="envers" />
+                <entry key="pre-collection-update" value-ref="envers" />
+                <entry key="pre-collection-remove" value-ref="envers" />
+                <entry key="post-collection-recreate" value-ref="envers" />
+            </map>
+        </property>
+        
+   <bean id="envers" class="org.hibernate.envers.event.AuditEventListener" />
+    -->
+
+    <!-- DAOs and service beans
+    <context:component-scan base-package="com.vaadin.demo.dashboard.dao.hibernate"/>
+    <context:component-scan base-package="com.vaadin.demo.dashboard.service"/>
+    -->

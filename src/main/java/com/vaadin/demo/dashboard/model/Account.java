@@ -15,14 +15,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,12 +37,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "account")
 @NamedQueries(
         {
-                @NamedQuery(
-                        name = "account.byUsername",
-                        query = "from Account a where a.username = :username"),
-                @NamedQuery(
-                        name = "account.byUsernameAndPassword",
-                        query = "from Account a where a.username = :username and a.password = :password")
+            @NamedQuery(
+                    name = "account.byUsername",
+                    query = "from Account a where a.username = :username"),
+            @NamedQuery(
+                    name = "account.byUsernameAndPassword",
+                    query = "from Account a where a.username = :username and a.password = :password")
         }
 )
 public class Account implements UserDetails, Serializable, Comparable<Account> {
@@ -47,35 +51,37 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
 
     private Long id;
 
-    @NotEmpty
+    @NotNull
     private String username;
 
-    @NotEmpty
+    @NotNull
     private String firstName;
 
-    @NotEmpty
+    @NotNull
     private String lastName;
 
-    @NotEmpty
+    @NotNull
     @Email
     private String email;
 
-    @NotEmpty
+    @NotNull
     private String password;
 
-    @NotEmpty
+    @NotNull
     private Date expirationDate;
 
-    @NotEmpty
+    @NotNull
     private boolean enabled;
 
-    @NotEmpty
+    @NotNull
     private boolean accountNonLocked;
 
-    @NotEmpty
+    @NotNull
     private boolean credentialsNonExpired;
 
     private Set<Authority> gandallAuthorities = new HashSet<>();
+
+    private AccountLoginAttempts accountLoginAttemps;
 
     public Account() {
     }
@@ -96,7 +102,7 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
         this.id = id;
     }
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     @Override
     public String getUsername() {
         return username;
@@ -129,7 +135,7 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
         return firstName + " " + lastName;
     }
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     public String getEmail() {
         return email;
     }
@@ -148,12 +154,20 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
         this.password = password;
     }
 
+    /**
+     *
+     * @return
+     */
     @Column(name = "expiration_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getExpirationDate() {
         return expirationDate;
     }
 
+    /**
+     *
+     * @param expirationDate
+     */
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
@@ -207,13 +221,17 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
         this.enabled = enabled;
     }
 
+    /**
+     *
+     * @return
+     */
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "account_authority",
             joinColumns = {
-                    @JoinColumn(name = "account_id")},
+                @JoinColumn(name = "account_id")},
             inverseJoinColumns = {
-                    @JoinColumn(name = "authority_id")})
+                @JoinColumn(name = "authority_id")})
     public Set<Authority> getGandallAuthorities() {
         return gandallAuthorities;
     }
@@ -222,6 +240,10 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
         this.gandallAuthorities = gandallAuthorities;
     }
 
+    /**
+     *
+     * @return
+     */
     @Transient
     public Set<Permission> getPermissions() {
         Set<Permission> perms = new HashSet<>();
@@ -239,8 +261,25 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     public Collection<GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.addAll(getGandallAuthorities());
-        //authorities.addAll(getPermissions());
         return authorities;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "account")
+    @Cascade({CascadeType.ALL})
+    public AccountLoginAttempts getAccountLoginAttemps() {
+        return accountLoginAttemps;
+    }
+
+    /**
+     *
+     * @param accountLoginAttemps
+     */
+    public void setAccountLoginAttemps(AccountLoginAttempts accountLoginAttemps) {
+        this.accountLoginAttemps = accountLoginAttemps;
     }
 
     /**

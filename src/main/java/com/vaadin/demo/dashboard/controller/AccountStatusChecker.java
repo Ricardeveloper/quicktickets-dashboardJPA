@@ -16,7 +16,6 @@ public class AccountStatusChecker implements UserDetailsChecker {
     @Override
     public void check(UserDetails user) {
 
-
         if (!user.isAccountNonExpired()) {
             throw new AccountExpiredException("User account has expired");
         }

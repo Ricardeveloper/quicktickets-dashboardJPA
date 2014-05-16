@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface AccountService {
 
     public UserDetails getAccountByUsernameAndPassword(String username, String password);
-    
+
     public UserDetails getAccountByUsername(String username);
-    
+
     public void createAccount(Account account);
 
 }

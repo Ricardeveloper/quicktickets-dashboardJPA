@@ -37,3 +37,5 @@ CALL createAccount('juan', '$2a$12$1geczus0gx0vdNIA5N98kuHsVVC6lH1ppGYZAVCEOn.r1
                    'juan@example.com', '2015-06-18 10:34:09', @juan);
 CALL accountHasAuthority(@juan, @authority_user);
 CALL accountHasAuthority(@juan, @authority_admin);
+
+INSERT INTO `account_attempts` (`account_id`, `attempts`, `lastModified`) VALUES ('2', '1', '2014-05-15 00:00:00');
