@@ -214,3 +214,24 @@ Offending resource: ServletContext resource [/WEB-INF/applicationContext.xml]; n
     <context:component-scan base-package="com.vaadin.demo.dashboard.dao.hibernate"/>
     <context:component-scan base-package="com.vaadin.demo.dashboard.service"/>
     -->
+
+
+
+    <!--
+   <util:properties id="eventListeners">
+       <prop key="pre-insert">timestampListener</prop>
+       <prop key="pre-update">timestampListener</prop>
+       <prop key="post-insert">auditListener</prop>
+       <prop key="post-update">auditListener</prop>
+       <prop key="post-delete">auditListener</prop>
+       <prop key="pre-collection-update">auditListener</prop>
+       <prop key="pre-collection-remove">auditListener</prop>
+       <prop key="post-collection-recreate">auditListener</prop>
+   </util:properties>
+   -->
+
+
+    <!--
+   <bean id="auditListener" class="org.hibernate.envers.event.AuditEventListener"/>
+   <bean id="timestampListener" class="ch.frankel.blog.envers.event.TimestampListener"/>
+   -->

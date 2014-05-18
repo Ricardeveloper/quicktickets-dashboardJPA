@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-    <persistence-unit name="com.vaadin.demo_quicktickets-dashboardJPA_war_1.0-SNAPSHOTPU"
-                      transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.vaadin.demo.dashboard.model.Permission</class>
-        <class>com.vaadin.demo.dashboard.model.Authority</class>
-        <class>com.vaadin.demo.dashboard.model.AccountLoginAttempts</class>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="persistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <class>com.vaadin.demo.dashboard.model.Account</class>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/sample"/>
-            <property name="javax.persistence.jdbc.user" value="app"/>
-            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
-            <property name="javax.persistence.jdbc.password" value="app"/>
-            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+            <property name="toplink.jdbc.url" value="jdbc:mysql://localhost:3306/geapp"/>
+            <property name="toplink.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="toplink.jdbc.user" value="root"/>
+            <property name="toplink.jdbc.password" value="khalid"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/geapp"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.password" value="khalid"/>
+            <property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/geapp"/>
+            <property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
+            <property name="openjpa.ConnectionUserName" value="root"/>
+            <property name="openjpa.ConnectionPassword" value="khalid"/>
             <property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3306/geapp"/>
             <property name="eclipselink.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="eclipselink.jdbc.user" value="root"/>

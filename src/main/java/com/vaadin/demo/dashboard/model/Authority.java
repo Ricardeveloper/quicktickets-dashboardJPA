@@ -1,17 +1,28 @@
 package com.vaadin.demo.dashboard.model;
 
+import org.hibernate.envers.Audited;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author Muaz Cisse
  */
 @Entity
+@Audited
 @Table(name = "authority")
 public class Authority implements GrantedAuthority, Serializable {
 
@@ -46,9 +57,9 @@ public class Authority implements GrantedAuthority, Serializable {
     @JoinTable(
             name = "authority_permission",
             joinColumns = {
-                @JoinColumn(name = "authority_id")},
+                    @JoinColumn(name = "authority_id")},
             inverseJoinColumns = {
-                @JoinColumn(name = "permission_id")})
+                    @JoinColumn(name = "permission_id")})
     public Set<Permission> getPermissions() {
         return permissions;
     }

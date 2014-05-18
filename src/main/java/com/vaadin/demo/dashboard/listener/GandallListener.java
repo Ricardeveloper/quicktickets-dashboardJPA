@@ -3,11 +3,15 @@ package com.vaadin.demo.dashboard.listener;
 import com.google.common.eventbus.EventBus;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.event.LoginEvent;
+import com.vaadin.demo.dashboard.model.Account;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
-import java.io.Serializable;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+
+import java.io.Serializable;
 
 /**
  * @author Muaz Cisse
@@ -20,6 +24,17 @@ public abstract class GandallListener implements Button.ClickListener, Serializa
     private LoginEvent loginEvent;
 
     private ApplicationContext applicationContext;
+
+    public static Account getCurrentAccount() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        return ((Account) authentication.getPrincipal());
+    }
 
     /**
      * @return the eventBus

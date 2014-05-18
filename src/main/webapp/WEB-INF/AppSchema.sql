@@ -10,7 +10,7 @@ USE geapp;
 CREATE TABLE account (
   id                     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   date_created           DATETIME     NOT NULL,
-  date_modified          DATETIME     NOT NULL,
+  last_updated           DATETIME     NOT NULL,
   username               VARCHAR(50)  NOT NULL,
   password               VARCHAR(100) NOT NULL,
   first_name             VARCHAR(50)  NOT NULL,
@@ -93,12 +93,14 @@ CREATE PROCEDURE `authorityHasPermission`($authority_id SMALLINT, $perm_name VAR
     INSERT INTO authority_permission (authority_id, permission_id) VALUES ($authority_id, _perm_id);
   END //
 
-CREATE PROCEDURE createAccount($name      VARCHAR(50), $date_created DATETIME, $date_modified DATETIME, $password VARCHAR(100), $first_name VARCHAR(50),
+CREATE PROCEDURE createAccount($name      VARCHAR(50), $date_created DATETIME, $last_updated DATETIME,
+                               $password  VARCHAR(100), $first_name VARCHAR(50),
                                $last_name VARCHAR(50), $email VARCHAR(50), $expiration_date DATETIME,
   OUT                          $id        INT)
   BEGIN
-    INSERT INTO account (username, date_created, date_modified, password, first_name, last_name, email, expiration_date, credential_non_expired, account_non_locked, enabled, account_non_deleted)
-    VALUES ($name, $date_created, $date_modified, $password, $first_name, $last_name, $email, $expiration_date, 1, 1, 1, 1);
+    INSERT INTO account (username, date_created, last_updated, password, first_name, last_name, email, expiration_date, credential_non_expired, account_non_locked, enabled, account_non_deleted)
+    VALUES
+      ($name, $date_created, $last_updated, $password, $first_name, $last_name, $email, $expiration_date, 1, 1, 1, 1);
     SET $id := last_insert_id();
   END //
 

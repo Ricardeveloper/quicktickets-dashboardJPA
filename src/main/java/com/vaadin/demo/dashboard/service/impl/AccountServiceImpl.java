@@ -2,6 +2,8 @@ package com.vaadin.demo.dashboard.service.impl;
 
 import com.vaadin.demo.dashboard.dao.AccountDao;
 import com.vaadin.demo.dashboard.model.Account;
+import com.vaadin.demo.dashboard.model.Authority;
+import com.vaadin.demo.dashboard.model.Permission;
 import com.vaadin.demo.dashboard.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +37,7 @@ public class AccountServiceImpl implements AccountService {
     public UserDetails getAccountByUsernameAndPassword(String username, String password) {
 
         Account account = accountDao.loadAccountByUsername(username);
+
 
         if (account != null) {
             if (passwordEncoder.matches(password, account.getPassword())) {
@@ -89,22 +92,57 @@ public class AccountServiceImpl implements AccountService {
     @PreAuthorize("hasRole('AUTHORITY_ADMIN')")
     @Override
     public void deleteAccount(Account account) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        account.setAccountNonDeleted(false);
+        accountDao.update(account);
     }
 
+    @PreAuthorize("hasRole('AUTHORITY_ADMIN')")
     @Override
     public void unblockAccount(Account account) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        account.setAccountNonLocked(true);
+        accountDao.update(account);
     }
 
+    @PreAuthorize("hasRole('AUTHORITY_ADMIN')")
     @Override
     public void changeAccountPassword(Account account) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @PreAuthorize("hasRole('AUTHORITY_ADMIN')")
     @Override
     public void disableAccount(Account account) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void createAuthority(Authority authority) {
+
+    }
+
+    @Override
+    public void updateAuthority(Authority authority) {
+
+    }
+
+    @Override
+    public void deleteAuthority(Authority authority) {
+
+    }
+
+    @Override
+    public void createPermission(Permission permission) {
+
+    }
+
+    @Override
+    public void updatePermission(Permission permission) {
+
+    }
+
+    @Override
+    public void deletePermission(Permission permission) {
+
     }
 
 }

@@ -15,8 +15,8 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.MovieDetailsWindow;
-import com.vaadin.demo.dashboard.data.DataProvider;
+//import com.vaadin.demo.dashboard.MovieDetailsWindow;
+//import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.TransactionsContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -56,7 +56,7 @@ public class TransactionsView extends GandallView {
 
     @Override
     public void enter(ViewChangeEvent event) {
-        data = ((DashboardUI) getUI()).getDataProvider().getTransactions();
+        //data = ((DashboardUI) getUI()).getDataProvider().getTransactions();
 
         setSizeFull();
         addStyleName("transactions");
@@ -99,7 +99,7 @@ public class TransactionsView extends GandallView {
 
         t.setFooterVisible(true);
         t.setColumnFooter("Time", "Total");
-        updatePriceFooter();
+        //updatePriceFooter();
 
         // Allow dragging items to the reports menu
         t.setDragMode(TableDragMode.MULTIROW);
@@ -255,6 +255,7 @@ public class TransactionsView extends GandallView {
                     Notification.show("Not implemented in this demo");
                 } else if (action == details) {
                     Item item = ((Table) sender).getItem(target);
+                    /*
                     if (item != null) {
                         Window w = new MovieDetailsWindow(DataProvider
                                 .getMovieForTitle(item.getItemProperty("Title")
@@ -262,6 +263,7 @@ public class TransactionsView extends GandallView {
                         UI.getCurrent().addWindow(w);
                         w.focus();
                     }
+                    */
                 }
             }
 
@@ -307,6 +309,7 @@ public class TransactionsView extends GandallView {
                         .getItemProperty(columnId).getValue().toString();
                 Button titleLink = new Button(title);
                 titleLink.addStyleName("link");
+                /*
                 titleLink.addClickListener(new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -315,6 +318,7 @@ public class TransactionsView extends GandallView {
                         UI.getCurrent().addWindow(w);
                     }
                 });
+                */
                 return title;
             }
         });
@@ -347,11 +351,13 @@ public class TransactionsView extends GandallView {
         ((DashboardUI) getUI()).openReports(t);
     }
 
+    /*
     void updatePriceFooter() {
         String ret = new DecimalFormat("#.##").format(DataProvider
                 .getTotalSum());
         t.setColumnFooter("Price", "$" + ret);
 
     }
+    */
 
 }

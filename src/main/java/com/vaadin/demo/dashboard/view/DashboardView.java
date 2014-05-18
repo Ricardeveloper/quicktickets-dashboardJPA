@@ -14,12 +14,10 @@ import com.vaadin.data.Property;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.TopGrossingMoviesChart;
 import com.vaadin.demo.dashboard.TopSixTheatersChart;
-import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -39,18 +37,22 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+
 import java.text.DecimalFormat;
+
+//import com.vaadin.demo.dashboard.data.DataProvider;
 
 public class DashboardView extends GandallView {
 
     Table t;
+    Window notifications;
 
     public DashboardView(final EventBus eventBus) {
-        
+
         setViewName("dashboard");
-        
+
         setEventBus(eventBus);
-        
+
         setSizeFull();
         addStyleName("dashboard-view");
 
@@ -92,7 +94,7 @@ public class DashboardView extends GandallView {
                                 public void layoutClick(LayoutClickEvent event) {
                                     notifications.close();
                                     ((CssLayout) getUI().getContent())
-                                    .removeLayoutClickListener(this);
+                                            .removeLayoutClickListener(this);
                                 }
                             });
                 }
@@ -202,7 +204,7 @@ public class DashboardView extends GandallView {
         t = new Table() {
             @Override
             protected String formatPropertyValue(Object rowId, Object colId,
-                    Property<?> property) {
+                                                 Property<?> property) {
                 if (colId.equals("Revenue")) {
                     if (property != null && property.getValue() != null) {
                         Double r = (Double) property.getValue();
@@ -231,6 +233,14 @@ public class DashboardView extends GandallView {
 
     }
 
+    /*
+    @Override
+    public void enter(ViewChangeEvent event) {
+        DataProvider dataProvider = ((DashboardUI) getUI()).getDataProvider();
+        t.setContainerDataSource(dataProvider.getRevenueByTitle());
+    }
+    */
+
     private CssLayout createPanel(Component content) {
         CssLayout panel = new CssLayout();
         panel.addStyleName("layout-panel");
@@ -255,14 +265,6 @@ public class DashboardView extends GandallView {
         return panel;
     }
 
-    @Override
-    public void enter(ViewChangeEvent event) {
-        DataProvider dataProvider = ((DashboardUI) getUI()).getDataProvider();
-        t.setContainerDataSource(dataProvider.getRevenueByTitle());
-    }
-
-    Window notifications;
-
     private void buildNotifications(ClickEvent event) {
         notifications = new Window("Notifications");
         VerticalLayout l = new VerticalLayout();
@@ -280,11 +282,12 @@ public class DashboardView extends GandallView {
 
         Label label = new Label(
                 "<hr><b>"
-                + Generator.randomFirstName()
-                + " "
-                + Generator.randomLastName()
-                + " created a new report</b><br><span>25 minutes ago</span><br>"
-                + Generator.randomText(18), ContentMode.HTML);
+                        + Generator.randomFirstName()
+                        + " "
+                        + Generator.randomLastName()
+                        + " created a new report</b><br><span>25 minutes ago</span><br>"
+                        + Generator.randomText(18), ContentMode.HTML
+        );
         l.addComponent(label);
 
         label = new Label("<hr><b>" + Generator.randomFirstName() + " "

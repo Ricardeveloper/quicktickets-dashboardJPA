@@ -4,14 +4,29 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 
@@ -19,28 +34,29 @@ import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare
  * @author Muaz Cisse
  */
 @Entity
+@Audited
 @Table(name = "account")
 @NamedQueries(
         {
-            @NamedQuery(
-                    name = "account.byUsername",
-                    query = "from Account a where a.username = :username"),
-            @NamedQuery(
-                    name = "account.byUsernameAndPassword",
-                    query = "from Account a where a.username = :username and a.password = :password")
+                @NamedQuery(
+                        name = "account.byUsername",
+                        query = "from Account a where a.username = :username and a.accountNonDeleted is true"),
+                @NamedQuery(
+                        name = "account.byUsernameAndPassword",
+                        query = "from Account a where a.username = :username and a.password = :password and a.accountNonDeleted is true")
         }
 )
-public class Account implements UserDetails, Serializable, Comparable<Account> {
+public class Account extends AuditableEntity implements UserDetails, Serializable, Comparable<Account> {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    //private Long id;
 
     @NotNull
     private Date dateCreated;
 
     @NotNull
-    private Date dateModified;
+    private Date lastUpdated;
 
     @NotNull
     private String username;
@@ -75,7 +91,7 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
 
     private Set<Authority> gandallAuthorities = new HashSet<>();
 
-    private AccountLoginAttempts accountLoginAttemps;
+    private AccountLoginAttempts accountLoginAttempts;
 
     public Account() {
     }
@@ -104,18 +120,19 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
      * @return the dateModified
      */
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    @Column(name = "date_modified")
-    public Date getDateModified() {
-        return dateModified;
+    @Column(name = "last_updated")
+    public Date getLastUpdated() {
+        return lastUpdated;
     }
 
     /**
      * @param dateModified the dateModified to set
      */
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
+    public void setLastUpdated(Date dateModified) {
+        this.lastUpdated = dateModified;
     }
 
+    /*
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -127,6 +144,7 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     private void setId(Long id) {
         this.id = id;
     }
+    */
 
     @Column(name = "username", unique = true, nullable = false)
     @Override
@@ -181,7 +199,6 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     }
 
     /**
-     *
      * @return
      */
     @Column(name = "expiration_date")
@@ -191,7 +208,6 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     }
 
     /**
-     *
      * @param expirationDate
      */
     public void setExpirationDate(Date expirationDate) {
@@ -263,16 +279,15 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     }
 
     /**
-     *
      * @return
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "account_authority",
             joinColumns = {
-                @JoinColumn(name = "account_id")},
+                    @JoinColumn(name = "account_id")},
             inverseJoinColumns = {
-                @JoinColumn(name = "authority_id")})
+                    @JoinColumn(name = "authority_id")})
     public Set<Authority> getGandallAuthorities() {
         return gandallAuthorities;
     }
@@ -282,7 +297,6 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     }
 
     /**
-     *
      * @return
      */
     @Transient
@@ -306,21 +320,19 @@ public class Account implements UserDetails, Serializable, Comparable<Account> {
     }
 
     /**
-     *
      * @return
      */
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "account")
     @Cascade({CascadeType.ALL})
-    public AccountLoginAttempts getAccountLoginAttemps() {
-        return accountLoginAttemps;
+    public AccountLoginAttempts getAccountLoginAttempts() {
+        return accountLoginAttempts;
     }
 
     /**
-     *
-     * @param accountLoginAttemps
+     * @param accountLoginAttempts
      */
-    public void setAccountLoginAttemps(AccountLoginAttempts accountLoginAttemps) {
-        this.accountLoginAttemps = accountLoginAttemps;
+    public void setAccountLoginAttempts(AccountLoginAttempts accountLoginAttempts) {
+        this.accountLoginAttempts = accountLoginAttempts;
     }
 
     /**

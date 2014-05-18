@@ -2,23 +2,31 @@ package com.vaadin.demo.dashboard.model;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
 import static org.apache.commons.lang.builder.CompareToBuilder.reflectionCompare;
 
 /**
- *
  * @author Muaz Cisse
  */
 @Entity
+@Audited
 @Table(name = "account_attempts")
 @NamedQueries(
         {
-            @NamedQuery(name = "account.updateLoginAttemps",
-                    query = AccountLoginAttempts.SQL_ACCOUNT_ATTEMPTS_UPDATE_ATTEMPTS)
+                @NamedQuery(name = "account.updateLoginAttempts",
+                        query = AccountLoginAttempts.SQL_ACCOUNT_ATTEMPTS_UPDATE_ATTEMPTS)
         }
 )
 public class AccountLoginAttempts implements Serializable, Comparable<AccountLoginAttempts> {
@@ -36,7 +44,6 @@ public class AccountLoginAttempts implements Serializable, Comparable<AccountLog
     private Account account;
 
     /**
-     *
      * @return
      */
     @Id

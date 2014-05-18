@@ -3,19 +3,19 @@ package com.vaadin.demo.dashboard.dao.hibernate;
 import com.vaadin.demo.dashboard.dao.AccountDao;
 import com.vaadin.demo.dashboard.model.Account;
 import com.vaadin.demo.dashboard.model.AccountLoginAttempts;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import static org.springframework.util.Assert.notNull;
 
 /**
- *
  * @author Muaz Cisse
  */
 @Repository("accountDao")
@@ -62,28 +62,28 @@ public class AccountDaoHibernate extends AbstractDaoHibernate<Account> implement
         notNull(account, "account can't be null");
         getSession().beginTransaction();
 
-        if (account.getAccountLoginAttemps() != null) {
-            // lock account if max login attemps is reached
-            if (account.getAccountLoginAttemps().getAttempts() >= MAX_LOGIN_ATTEMPTS) {
+        if (account.getAccountLoginAttempts() != null) {
+            // lock account if max login attempts is reached
+            if (account.getAccountLoginAttempts().getAttempts() >= MAX_LOGIN_ATTEMPTS) {
                 account.setAccountNonLocked(false);
                 update(account);
             } else {
                 // update attempts count, +1
-                getSession().getNamedQuery("account.updateLoginAttemps")
-                        .setInteger("attempts", account.getAccountLoginAttemps().getAttempts() + 1)
+                getSession().getNamedQuery("account.updateLoginAttempts")
+                        .setInteger("attempts", account.getAccountLoginAttempts().getAttempts() + 1)
                         .setTimestamp("lastModified", timestamp)
                         .setLong("id", account.getId())
                         .executeUpdate();
             }
         } else {
-            // if no login attemps record, insert a new
+            // if no login attempts record, insert a new
             AccountLoginAttempts accountLoginAttempts = new AccountLoginAttempts();
             accountLoginAttempts.setId(account.getId());
             accountLoginAttempts.setLastModified(timestamp);
             accountLoginAttempts.setAttempts(1);
             accountLoginAttempts.setAccount(account);
 
-            account.setAccountLoginAttemps(accountLoginAttempts);
+            account.setAccountLoginAttempts(accountLoginAttempts);
 
             update(account);
         }
@@ -94,20 +94,23 @@ public class AccountDaoHibernate extends AbstractDaoHibernate<Account> implement
     @Override
     public void resetFailAttempts(Account account) {
         notNull(account, "account can't be null");
-        getSession().beginTransaction();
-        Query query = getSession().getNamedQuery("account.updateLoginAttemps")
+        //getSession().beginTransaction();
+
+        /*
+        Query query = getSession().getNamedQuery("account.updateLoginAttempts")
                 .setInteger("attempts", 0)
                 .setTimestamp("lastModified", timestamp)
                 .setLong("id", account.getId());
 
         query.executeUpdate();
+        */
 
-        /*
-         account.getAccountLoginAttemps().setAttempts(0);
-         account.getAccountLoginAttemps().setLastModified(timestamp);
-         accountDao.update(account);
-         */
-        getSession().getTransaction().commit();
+
+        account.getAccountLoginAttempts().setAttempts(0);
+        account.getAccountLoginAttempts().setLastModified(timestamp);
+        update(account);
+
+        //getSession().getTransaction().commit();
     }
 
     @Override

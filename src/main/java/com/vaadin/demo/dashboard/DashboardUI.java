@@ -14,13 +14,11 @@ import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.demo.dashboard.controller.ViewChangeSecurityChecker;
-import com.vaadin.demo.dashboard.data.DataProvider;
 import com.vaadin.demo.dashboard.data.Generator;
 import com.vaadin.demo.dashboard.data.MyConverterFactory;
 import com.vaadin.demo.dashboard.view.DashboardView;
 import com.vaadin.demo.dashboard.view.GandallView;
 import com.vaadin.demo.dashboard.view.LoginView;
-import com.vaadin.demo.dashboard.view.ReportsView;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -28,15 +26,31 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.*;
+import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.WrappedHttpSession;
+import com.vaadin.server.WrappedSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -50,6 +64,9 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+//import com.vaadin.demo.dashboard.data.DataProvider;
+//import com.vaadin.demo.dashboard.view.ReportsView;
+
 @PreserveOnRefresh
 @Theme("dashboard")
 @Title("QuickTickets Dashboard")
@@ -57,7 +74,7 @@ public class DashboardUI extends UI {
 
     private static final long serialVersionUID = 1L;
     private final EventBus bus = new EventBus();
-    private final DataProvider dataProvider = new DataProvider();
+    //private final DataProvider dataProvider = new DataProvider();
     CssLayout root = new CssLayout();
     VerticalLayout loginLayout;
     CssLayout menu = new CssLayout();
@@ -331,9 +348,11 @@ public class DashboardUI extends UI {
             public void afterViewChange(ViewChangeEvent event) {
                 View newView = event.getNewView();
                 helpManager.showHelpFor(newView);
+                /*
                 if (autoCreateReport && newView instanceof ReportsView) {
                     ((ReportsView) newView).autoCreate(2, items, transactions);
                 }
+                */
                 autoCreateReport = false;
             }
         });
@@ -341,7 +360,7 @@ public class DashboardUI extends UI {
     }
 
     private void clearMenuSelection() {
-        for (Iterator<Component> it = menu.getComponentIterator(); it.hasNext(); ) {
+        for (Iterator<Component> it = menu.iterator(); it.hasNext(); ) {
             Component next = it.next();
             if (next instanceof NativeButton) {
                 next.removeStyleName("selected");
@@ -378,8 +397,10 @@ public class DashboardUI extends UI {
     /**
      * @return the dataProvider
      */
+    /*
     public DataProvider getDataProvider() {
         return dataProvider;
     }
+    */
 
 }

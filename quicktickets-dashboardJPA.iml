@@ -4,7 +4,6 @@
     <facet type="web" name="Web">
       <configuration>
         <descriptors>
-          <deploymentDescriptor name="context.xml" url="file://$MODULE_DIR$/src/main/webapp/META-INF/context.xml" />
           <deploymentDescriptor name="glassfish-web.xml" url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/glassfish-web.xml" />
           <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/web.xml" />
         </descriptors>
@@ -27,23 +26,22 @@
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
-        <setting name="provider-name" value="Hibernate" />
+        <setting name="provider-name" value="" />
         <datasource-mapping>
-          <factory-entry name="com.vaadin.demo_quicktickets-dashboardJPA_war_1.0-SNAPSHOTPU" value="135c20b7-4aaf-430e-8740-eac37c4e9c4a" />
+          <factory-entry name="persistenceUnit" value="135c20b7-4aaf-430e-8740-eac37c4e9c4a" />
         </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
-      <configuration>
+      <configuration process_explicitly_annotated="false">
         <fileset id="fileset" name="Spring Application Context" removed="false">
+          <dependency>web application context</dependency>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/applicationContext.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/datasource-config.xml</file>
-          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/applicationContext.xml</file>
-          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/hibernate-config.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/security-config.xml</file>
-        </fileset>
-        <fileset id="web application context" name="MVC application context" removed="true">
-          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/applicationContext.xml</file>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/dispatcher-servlet.xml</file>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/hibernate-config.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -105,6 +103,7 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:3.2.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:3.2.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.30" level="project" />
+    <orderEntry type="library" name="Maven: commons-dbcp:commons-dbcp:20030825.184428" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:17.0-rc2" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:4.3.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.1.3.GA" level="project" />
@@ -118,6 +117,7 @@
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.jboss:jandex:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-entitymanager:4.3.5.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-envers:4.3.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.javaconfig:spring-javaconfig:1.0.0.m3" level="project" />
     <orderEntry type="library" name="Maven: cglib:cglib-nodep:2.1_3" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
